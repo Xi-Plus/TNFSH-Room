@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-Hant-TW">
 <?php
+date_default_timezone_set("Asia/Taipei");
 include_once("../func/sql.php");
 include_once("../func/shortcut.php");
 include_once("../func/checkpermission.php");
