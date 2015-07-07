@@ -318,7 +318,7 @@ if($showdata){
 				<input class="form-control" name="semail" type="email" id="semail" value="<?php echo $editdata["email"];?>" maxlength="64">
 				<span class="input-group-addon glyphicon glyphicon-envelope"></span>
 			</div>
-			<button name="input" type="submit" class="btn btn-success" onClick="if(!confirm('確認取消?'))return false;delhash.value='<?php echo $borrow["hash"]; ?>';delborrow.submit();">
+			<button name="input" type="submit" class="btn btn-success">
 				<span class="glyphicon glyphicon-pencil"></span>
 				更新資料 
 			</button>
