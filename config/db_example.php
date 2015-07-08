@@ -3,7 +3,7 @@
 // Edit following
 $db=new stdClass();
 $db->host="localhost";
-$db->username="";
-$db->password="";
-$db->dbname="ebcms";
+$db->username="username";
+$db->password="password";
+$db->dbname="tnfsh_classroom";
 ?>
