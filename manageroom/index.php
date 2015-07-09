@@ -3,7 +3,7 @@
 <?php
 date_default_timezone_set("Asia/Taipei");
 include_once("../func/sql.php");
-include_once("../func/shortcut.php");
+include_once("../func/common.php");
 include_once("../func/checkpermission.php");
 include_once("../func/consolelog.php");
 include_once("../func/data.php");
@@ -27,13 +27,9 @@ else if(isset($_POST["catdelid"])){
 	addmsgbox("info","已刪除分類 名稱為 ".$row["name"]);
 }
 else if(isset($_POST["addcat"])){
-	$query=new query;
-	$query->table = "category";
-	$query->column = array("MAX(id)");
-	$row = fetchone(SELECT($query));
-	$newid=$row["MAX(id)"]+1;
 	if($_POST["name"]=="")addmsgbox("warning","名稱為空");
 	else{
+		$newid=getrandommd5();
 		$query=new query;
 		$query->table ="category";
 		$query->value = array(
@@ -75,11 +71,7 @@ else if(isset($_POST["addroom"])){
 	if($_POST["name"]=="")addmsgbox("warning","名稱為空");
 	else if($_POST["cat"]=="")addmsgbox("warning","分類為空");
 	else{
-		$query=new query;
-		$query->table = "roomlist";
-		$query->column = array("MAX(id)");
-		$row = fetchone(SELECT($query));
-		$newid=$row["MAX(id)"]+1;
+		$newid=getrandommd5();
 		$query=new query;
 		$query->table ="roomlist";
 		$query->value = array(
@@ -119,7 +111,7 @@ else if(isset($_POST["roomadminid"])){
 	);
 	UPDATE($query);
 	$row=getoneroom($_POST['roomadminid']);
-	addmsgbox("success","已修改教室 ".$row["name"]." 管理者為 ".($_POST["adminid"]==0?"無":$acct[$_POST["adminid"]]["name"]));
+	addmsgbox("success","已修改教室 ".$row["name"]." 管理者為 ".($_POST["adminid"]==""?"無":$acct[$_POST["adminid"]]["name"]));
 }
 ?>
 <head>
@@ -324,18 +316,18 @@ if($data["power"]>=2){
 								adminid.value=this.value;
 								roomadmin.submit();
 							">
-								<option value="0">無</option>
+								<option value="">無</option>
 							<?php
 								foreach($acct as $i => $accttemp){
 							?>
-								<option value="<?php echo $i; ?>" <?php echo ($roomtemp["admin"]==$i?"selected":"")?>><?php echo $i." ".$accttemp["name"]; ?></option>
+								<option value="<?php echo $i; ?>" <?php echo ($roomtemp["admin"]==$i?"selected":"")?>><?php echo $accttemp["name"]; ?></option>
 							<?php
 								}
 							?>
 							</select>
 						</td>
 						<td>
-						<button name="input" type="button" class="btn btn-danger" onClick="if(!confirm('確認刪除?'))return false;roomdelid.value=<?php echo $roomtemp["id"]; ?>;roomdel.submit();">
+						<button name="input" type="button" class="btn btn-danger" onClick="if(!confirm('確認刪除?'))return false;roomdelid.value='<?php echo $roomtemp["id"]; ?>';roomdel.submit();">
 							<span class="glyphicon glyphicon-trash"></span>
 							刪除 
 						</button>

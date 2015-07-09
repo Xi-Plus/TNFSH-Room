@@ -6,4 +6,7 @@ function url(){
 function het($text){
 	return htmlentities($text,ENT_QUOTES);
 }
+function getrandommd5(){
+	return md5(uniqid(rand(),true));
+}
 ?>

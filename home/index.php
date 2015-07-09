@@ -4,7 +4,7 @@
 date_default_timezone_set("Asia/Taipei");
 include_once("../func/checkpermission.php");
 include_once("../func/sql.php");
-include_once("../func/shortcut.php");
+include_once("../func/common.php");
 include_once("../func/data.php");
 ?>
 <head>

@@ -4,7 +4,7 @@
 date_default_timezone_set("Asia/Taipei");
 include_once("../func/checkpermission.php");
 include_once("../func/sql.php");
-include_once("../func/shortcut.php");
+include_once("../func/common.php");
 include_once("../func/msgbox.php");
 $noshow=true;
 $nosignup=true;
@@ -27,7 +27,7 @@ if(checklogin()){
 		if($row["power"]<=0){
 			addmsgbox("warning","此帳戶已遭封禁，無法登入");
 		}else{
-			$cookie=md5(uniqid(rand(),true));
+			$cookie=getrandommd5();
 			setcookie("TNFSH_Classroom", $cookie, time()+86400*7, "/");
 			$query=new query;
 			$query->table = "session";

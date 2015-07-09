@@ -3,7 +3,7 @@
 <?php
 date_default_timezone_set("Asia/Taipei");
 include_once("../func/sql.php");
-include_once("../func/shortcut.php");
+include_once("../func/common.php");
 include_once("../func/checkpermission.php");
 include_once("../func/consolelog.php");
 include_once("../func/data.php");
@@ -73,16 +73,12 @@ else if($data["power"]<=1){
 	}else if($_POST["semail"]!=""&&!preg_match("/^[_a-z0-9-]+([.][_a-z0-9-]+)*@[a-z0-9-]+([.][a-z0-9-]+)*$/",$_POST["semail"])){
 		addmsgbox("warning","郵件位址不正確");
 	}else{
-		$query=new query;
-		$query->table = "account";
-		$query->column = array("MAX(id)");
-		$row = fetchone(SELECT($query));
-		$id=$row["MAX(id)"]+1;
+		$newid=getrandommd5();
 		if($_POST["spwd"]!="")$_POST["spwd"]=@crypt($_POST["spwd"]);
 		$query=new query;
 		$query->table ="account";
 		$query->value = array(
-			array("id",$id),
+			array("id",$newid),
 			array("user",$_POST["suser"]),
 			array("pwd",$_POST["spwd"]),
 			array("email",$_POST["semail"]),
@@ -163,7 +159,7 @@ if($data["power"]>=2){
 			?>
 			<tr>
 				<td><a href="../user/?id=<?php echo $accttemp["id"]; ?>"><?php echo het($accttemp["user"]); ?></a></td>
-				<td><?php echo $accttemp["id"]." ".het($accttemp["name"]); ?></td>
+				<td><?php echo het($accttemp["name"]); ?></td>
 				<td><?php echo $accttemp["email"]; ?></td>
 				<td>
 					<select class="form-control" onchange="
