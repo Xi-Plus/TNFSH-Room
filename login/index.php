@@ -6,10 +6,25 @@ include_once("../func/checkpermission.php");
 include_once("../func/sql.php");
 include_once("../func/common.php");
 include_once("../func/msgbox.php");
+function loginsuccess($row){
+	global $noshow;
+	$cookie=getrandommd5();
+	setcookie("TNFSH_Classroom", $cookie, time()+86400*7, "/");
+	$query=new query;
+	$query->table = "session";
+	$query->value = array(
+		array("id",$row["id"]),
+		array("cookie",$cookie)
+	);
+	INSERT($query);
+	addmsgbox("success","登入成功",false);
+	$noshow=false;
+	?><script>setTimeout(function(){location="../<?php echo (@$_GET["from"]==""?"home":@$_GET["from"]);?>";},3000)</script><?php
+}
 $noshow=true;
 $nosignup=true;
 if(checklogin()){
-	addmsgbox("info","你已經登入了");
+	addmsgbox("info","你已經登入了",false);
 	$noshow=false;
 	?><script>setTimeout(function(){location="../home";},1000)</script><?php
 }else if(isset($_POST['user'])){
@@ -27,18 +42,7 @@ if(checklogin()){
 		if($row["power"]<=0){
 			addmsgbox("warning","此帳戶已遭封禁，無法登入");
 		}else{
-			$cookie=getrandommd5();
-			setcookie("TNFSH_Classroom", $cookie, time()+86400*7, "/");
-			$query=new query;
-			$query->table = "session";
-			$query->value = array(
-				array("id",$row["id"]),
-				array("cookie",$cookie)
-			);
-			INSERT($query);
-			addmsgbox("success","登入成功",false);
-			$noshow=false;
-			?><script>setTimeout(function(){location="../<?php echo (@$_GET["from"]==""?"home":@$_GET["from"]);?>";},1000)</script><?php
+			loginsuccess($row);
 		}
 	}else if($row["pwd"]==""){
 
@@ -57,18 +61,7 @@ fputs ($fp, "PASS $user_passwd
 ");
 if (!feof($fp)) {
 	if(substr(fgets($fp,128),0,14)=="+OK Logged in."){
-		$cookie=md5(uniqid(rand(),true));
-		setcookie("TNFSH_Classroom", $cookie, time()+86400*7, "/");
-		$query=new query;
-		$query->table ="session";
-		$query->value = array(
-			array("id",$row["id"]),
-			array("cookie",$cookie)
-		);
-		INSERT($query);
-		addmsgbox("success","登入成功",false);
-		$noshow=false;
-		?><script>setTimeout(function(){location="../<?php echo (@$_GET["from"]==""?"home":@$_GET["from"]);?>";},1000)</script><?php
+		loginsuccess($row);
 	}else {
 		addmsgbox("danger","密碼錯誤");
 	}
