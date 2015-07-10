@@ -36,7 +36,18 @@ function getoneacct($id){
 	return getone("account",$id);
 }
 function getallacct(){
-	return getall("account");
+	$query=new query;
+	$query->table = "account";
+	$query->column = array("*");
+	$query->order = array(
+		array("name","ASC")
+	);
+	$row = SELECT($query);
+	$data=array();
+	foreach ($row as $temp){
+		$data[$temp["id"]]=$temp;
+	}
+	return $data;
 }
 
 function getoneroom($id){
