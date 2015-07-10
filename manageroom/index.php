@@ -77,10 +77,11 @@ else if(isset($_POST["addroom"])){
 		$query->value = array(
 			array("id",$newid),
 			array("name",$_POST["name"]),
-			array("cat",$_POST["cat"])
+			array("cat",$_POST["cat"]),
+			array("admin",$_POST["admin"])
 		);
 		INSERT($query);
-		addmsgbox("success","已增加教室 名稱為 ".$_POST["name"]." 分類為 ".$cate[$_POST["cat"]]["name"]);
+		addmsgbox("success","已增加教室 名稱為 ".$_POST["name"]." 分類為 ".$cate[$_POST["cat"]]["name"]." 管理者為 ".($_POST["admin"]==""?"無":$acct[$_POST["admin"]]["name"]));
 	}
 }
 else if(isset($_POST["editroom"])){
@@ -145,7 +146,7 @@ if($data["power"]>=2){
 					<h2>修改</h2>
 					<div class="input-group">
 						<span class="input-group-addon">原始</span>
-						<select class="form-control" name="id" id="editcate" onChange="editcatename.value=$('#editcate option:selected').text();">
+						<select class="form-control" name="id" id="editcate" onChange="editcatechange(this.value);">
 						<?php
 							foreach($cate as $i => $catetemp){
 						?>
@@ -161,7 +162,12 @@ if($data["power"]>=2){
 						<input class="form-control" name="name" type="text" id="editcatename" required>
 						<span class="input-group-addon glyphicon glyphicon-pencil"></span>
 					</div>
-					<script>editcatename.value=$('#editcate option:selected').text();</script>
+					<script>
+					function editcatechange(id){
+						editcatename.value=cate[id]["name"];
+					}
+					editcatechange(editcate.value);
+					</script>
 					<button name="input" type="submit" class="btn btn-success">
 						<span class="glyphicon glyphicon-pencil"></span>
 						修改 
@@ -211,7 +217,7 @@ if($data["power"]>=2){
 					<h2>新增</h2>
 					<div class="input-group">
 						<span class="input-group-addon">名稱</span>
-						<input class="form-control" name="name" type="text" id="name" required>
+						<input class="form-control" name="name" type="text" required>
 						<span class="input-group-addon glyphicon glyphicon-pencil"></span>
 					</div>
 					<div class="input-group">
@@ -227,6 +233,20 @@ if($data["power"]>=2){
 						</select>
 						<span class="input-group-addon glyphicon glyphicon-tag"></span>
 					</div>
+					<div class="input-group">
+						<span class="input-group-addon">管理員</span>
+						<select class="form-control" name="admin">
+							<option value="">無</option>
+						<?php
+							foreach($acct as $i => $accttemp){
+						?>
+							<option value="<?php echo $i; ?>"><?php echo $accttemp["name"]; ?></option>
+						<?php
+							}
+						?>
+						</select>
+						<span class="input-group-addon glyphicon glyphicon-user"></span>
+					</div>
 					<button name="input" type="submit" class="btn btn-success">
 						<span class="glyphicon glyphicon-plus"></span>
 						新增 
@@ -239,7 +259,7 @@ if($data["power"]>=2){
 					<h2>修改</h2>
 					<div class="input-group">
 						<span class="input-group-addon">原始</span>
-						<select class="form-control" name="id" id="editroom" onChange="editroomchange(this.value)">
+						<select class="form-control" name="id" id="editroom" onChange="editroomchange(this.value);">
 						<?php
 							foreach($room as $i => $roomtemp){
 						?>
@@ -280,7 +300,7 @@ if($data["power"]>=2){
 							}
 						?>
 						</select>
-						<span class="input-group-addon glyphicon glyphicon-tag"></span>
+						<span class="input-group-addon glyphicon glyphicon-user"></span>
 					</div>
 					<script>
 					function getindexbyvalue(array,value){
