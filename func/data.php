@@ -18,6 +18,7 @@ function getall($table){
 		array("id","ASC")
 	);
 	$row = SELECT($query);
+	$data=array();
 	foreach ($row as $temp){
 		$data[$temp["id"]]=$temp;
 	}
@@ -42,7 +43,19 @@ function getoneroom($id){
 	return getone("roomlist",$id);
 }
 function getallroom(){
-	return getall("roomlist");
+	$query=new query;
+	$query->table = "roomlist";
+	$query->column = array("*");
+	$query->order = array(
+		array("cat","ASC"),
+		array("name","ASC")
+	);
+	$row = SELECT($query);
+	$data=array();
+	foreach ($row as $temp){
+		$data[$temp["id"]]=$temp;
+	}
+	return $data;
 }
 
 function getoneborrow($hash){
