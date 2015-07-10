@@ -49,7 +49,7 @@ include_once("../res/header.php");
 		?>
 		<tr>
 			<td><?php echo $acct[$borrow["userid"]]["name"]; ?></td>
-			<td><?php echo $cate[$room[$borrow["roomid"]]["cat"]]["name"]."-".$room[$borrow["roomid"]]["name"]; ?></td>
+			<td><?php echo $cate[$room[$borrow["roomid"]]["cate"]]["name"]."-".$room[$borrow["roomid"]]["name"]; ?></td>
 			<td><?php echo $borrow["date"]; ?></td>
 			<td><?php echo $borrow["class"]; ?></td>
 			<td><?php echo ($borrow["valid"]?"通過":"審核中"); ?></td>

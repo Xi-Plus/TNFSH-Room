@@ -11,22 +11,22 @@ include_once("../func/msgbox.php");
 $error="";
 $message="";
 $data=checklogin();
-if($data==false)header("Location: ../login/?from=manageroom");
+if($data==false)header("Locateion: ../login/?from=manageroom");
 else if($data["power"]<=1){
 	addmsgbox("danger","你沒有權限");
-	?><script>setTimeout(function(){location="../home";},1000);</script><?php
+	?><script>setTimeout(function(){locateion="../home";},1000);</script><?php
 }
-else if(isset($_POST["catdelid"])){
-	$row=getonecate($_POST['catdelid']);
+else if(isset($_POST["catedelid"])){
+	$row=getonecate($_POST['catedelid']);
 	$query=new query;
 	$query->table = "category";
 	$query->where = array(
-		array("id",$_POST["catdelid"])
+		array("id",$_POST["catedelid"])
 	);
 	DELETE($query);
 	addmsgbox("info","已刪除分類 名稱為 ".$row["name"]);
 }
-else if(isset($_POST["addcat"])){
+else if(isset($_POST["addcate"])){
 	if($_POST["name"]=="")addmsgbox("warning","名稱為空");
 	else{
 		$newid=getrandommd5();
@@ -40,7 +40,7 @@ else if(isset($_POST["addcat"])){
 		addmsgbox("success","已增加分類 名稱為 ".$_POST["name"]);
 	}
 }
-else if(isset($_POST["editcat"])){
+else if(isset($_POST["editcate"])){
 	if($_POST["name"]=="")addmsgbox("warning","名稱為空");
 	else {
 		$query=new query;
@@ -69,7 +69,7 @@ if(isset($_POST["roomdelid"])){
 }
 else if(isset($_POST["addroom"])){
 	if($_POST["name"]=="")addmsgbox("warning","名稱為空");
-	else if($_POST["cat"]=="")addmsgbox("warning","分類為空");
+	else if($_POST["cate"]=="")addmsgbox("warning","分類為空");
 	else{
 		$newid=getrandommd5();
 		$query=new query;
@@ -77,11 +77,11 @@ else if(isset($_POST["addroom"])){
 		$query->value = array(
 			array("id",$newid),
 			array("name",$_POST["name"]),
-			array("cat",$_POST["cat"]),
+			array("cate",$_POST["cate"]),
 			array("admin",$_POST["admin"])
 		);
 		INSERT($query);
-		addmsgbox("success","已增加教室 名稱為 ".$_POST["name"]." 分類為 ".$cate[$_POST["cat"]]["name"]." 管理者為 ".($_POST["admin"]==""?"無":$acct[$_POST["admin"]]["name"]));
+		addmsgbox("success","已增加教室 名稱為 ".$_POST["name"]." 分類為 ".$cate[$_POST["cate"]]["name"]." 管理者為 ".($_POST["admin"]==""?"無":$acct[$_POST["admin"]]["name"]));
 	}
 }
 else if(isset($_POST["editroom"])){
@@ -91,7 +91,7 @@ else if(isset($_POST["editroom"])){
 		$query->table = "roomlist";
 		$query->value = array(
 			array("name",$_POST["name"]),
-			array("cat",$_POST["cat"]),
+			array("cate",$_POST["cate"]),
 			array("admin",$_POST["admin"])
 		);
 		$query->where = array(
@@ -99,7 +99,7 @@ else if(isset($_POST["editroom"])){
 		);
 		UPDATE($query);
 		$row=getoneroom($_POST['id']);
-		addmsgbox("success","已修改教室 名稱為 ".$row["name"]." 分類為 ".$cate[$row["cat"]]["name"]." 管理者為 ".($row["admin"]==""?"無":$acct[$row["admin"]]["name"]));
+		addmsgbox("success","已修改教室 名稱為 ".$row["name"]." 分類為 ".$cate[$row["cate"]]["name"]." 管理者為 ".($row["admin"]==""?"無":$acct[$row["admin"]]["name"]));
 	}
 }
 $room=getallroom();
@@ -127,7 +127,7 @@ if($data["power"]>=2){
 		<div class="row">
 			<div class="col-sm-6">
 				<form method="post">
-					<input name="addcat" type="hidden" value="">
+					<input name="addcate" type="hidden" value="">
 					<h2>新增</h2>
 					<div class="input-group">
 						<span class="input-group-addon">名稱</span>
@@ -142,7 +142,7 @@ if($data["power"]>=2){
 			</div>
 			<div class="col-sm-6">
 				<form method="post">
-					<input name="editcat" type="hidden" value="">
+					<input name="editcate" type="hidden" value="">
 					<h2>修改</h2>
 					<div class="input-group">
 						<span class="input-group-addon">原始</span>
@@ -180,8 +180,8 @@ if($data["power"]>=2){
 				<div class="table-responsive">
 				<table border="1" cellspacing="0" cellpadding="2" class="table table-hover table-condensed">
 				<div style="display:none">
-					<form method="post" id="catdel">
-						<input name="catdelid" type="hidden" id="catdelid">
+					<form method="post" id="catedel">
+						<input name="catedelid" type="hidden" id="catedelid">
 					</form>
 				</div>
 				<tr>
@@ -194,7 +194,7 @@ if($data["power"]>=2){
 				<tr>
 					<td><?php echo $catetemp["name"]; ?></td>
 					<td>
-						<button name="input" type="button" class="btn btn-danger" onClick="if(!confirm('確認刪除?'))return false;catdelid.value='<?php echo $i; ?>';catdel.submit();" >
+						<button name="input" type="button" class="btn btn-danger" onClick="if(!confirm('確認刪除?'))return false;catedelid.value='<?php echo $i; ?>';catedel.submit();" >
 						<span class="glyphicon glyphicon-trash"></span>
 						刪除 
 						</button>
@@ -222,7 +222,7 @@ if($data["power"]>=2){
 					</div>
 					<div class="input-group">
 						<span class="input-group-addon">分類</span>
-						<select class="form-control" name="cat">
+						<select class="form-control" name="cate">
 						<?php
 							foreach($cate as $i => $catetemp){
 						?>
@@ -277,7 +277,7 @@ if($data["power"]>=2){
 					</div>
 					<div class="input-group">
 						<span class="input-group-addon">分類</span>
-						<select class="form-control" name="cat" id="editroomcat">
+						<select class="form-control" name="cate" id="editroomcate">
 						<?php
 							foreach($cate as $i => $catetemp){
 						?>
@@ -311,7 +311,7 @@ if($data["power"]>=2){
 					}
 					function editroomchange(id){
 						editroomname.value=room[id]["name"];
-						editroomcat.selectedIndex=getindexbyvalue(editroomcat,room[id]["cat"]);
+						editroomcate.selectedIndex=getindexbyvalue(editroomcate,room[id]["cate"]);
 						editroomadmin.selectedIndex=getindexbyvalue(editroomadmin,room[id]["admin"]);
 					}
 					editroomchange(editroom.value);
@@ -342,7 +342,7 @@ if($data["power"]>=2){
 				foreach ($room as $roomtemp) {
 				?>
 					<tr>
-						<td><?php echo @$cate[$roomtemp["cat"]]["name"]; ?></td>
+						<td><?php echo @$cate[$roomtemp["cate"]]["name"]; ?></td>
 						<td><a href="../search/?roomid=<?php echo $roomtemp["id"]; ?>"><?php echo htmlspecialchars($roomtemp["name"],ENT_QUOTES); ?></a></td>
 						<td><?php echo ($roomtemp["admin"]==""?"無":$acct[$roomtemp["admin"]]["name"]); ?></td>
 						<td>

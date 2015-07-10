@@ -179,7 +179,7 @@ include_once("../res/header.php");
 					$room=getallroom();
 					foreach ($room as $roomtemp) {
 				?>
-					<option value="<?php echo $roomtemp["id"]; ?>"<?php echo($roomtemp["id"]==$roomid?" selected":""); ?>><?php echo @$cate[$roomtemp["cat"]]["name"]." ".$roomtemp["name"]; ?></option>
+					<option value="<?php echo $roomtemp["id"]; ?>"<?php echo($roomtemp["id"]==$roomid?" selected":""); ?>><?php echo @$cate[$roomtemp["cate"]]["name"]." ".$roomtemp["name"]; ?></option>
 				<?php
 					}
 				?>
@@ -259,7 +259,7 @@ include_once("../res/header.php");
 			$firstdate=strtotime($date)-date("w",strtotime($date))*86400;
 			$enddate=strtotime($date)-(date("w",strtotime($date))-6)*86400;
 			?>
-			目前顯示：<?php echo date("Y-m-d",$firstdate); ?>&nbsp;至&nbsp;<?php echo date("Y-m-d",$enddate); ?>&nbsp;<?php echo $cate[$room[$roomid]["cat"]]["name"]." ".$room[$roomid]["name"]; ?>
+			目前顯示：<?php echo date("Y-m-d",$firstdate); ?>&nbsp;至&nbsp;<?php echo date("Y-m-d",$enddate); ?>&nbsp;<?php echo $cate[$room[$roomid]["cate"]]["name"]." ".$room[$roomid]["name"]; ?>
 			
 			<div class="table-responsive">
 			<table cellspacing="0" cellpadding="5" style="font-size:20px" class="table table-hover table-condensed">

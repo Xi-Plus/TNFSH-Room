@@ -11,7 +11,7 @@ $login=checklogin();
 if($login===false)header("Location: ../login/?from=validborrow");
 else if(!checkroompermission($login["id"])){
 	addmsgbox("danger","你沒有權限");
-	?><script>setTimeout(function(){location="../home";},1000);</script><?php
+	?><script>setTimeout(function(){locateion="../home";},1000);</script><?php
 }
 $room=getallroom();
 $cate=getallcate();
@@ -31,7 +31,7 @@ if(isset($_POST['valid'])){
 			array("hash",$_POST["hash"])
 		);
 		UPDATE($query);
-		addmsgbox("success","已允許申請 ".$cate[$room[$row["roomid"]]["cat"]]["name"]."-".$room[$row["roomid"]]["name"]." ".$row["date"]." 第".$row["class"]."節",true);
+		addmsgbox("success","已允許申請 ".$cate[$room[$row["roomid"]]["cate"]]["name"]."-".$room[$row["roomid"]]["name"]." ".$row["date"]." 第".$row["class"]."節",true);
 	}else if(@$_POST['valid']=="false"){
 		$query=new query;
 		$query->table = "borrow";
@@ -39,7 +39,7 @@ if(isset($_POST['valid'])){
 			array("hash",$_POST["hash"])
 		);
 		DELETE($query);
-		addmsgbox("info","已拒絕申請 ".$cate[$room[$row["roomid"]]["cat"]]["name"]."-".$room[$row["roomid"]]["name"]." ".$row["date"]." 第".$row["class"]."節",true);
+		addmsgbox("info","已拒絕申請 ".$cate[$room[$row["roomid"]]["cate"]]["name"]."-".$room[$row["roomid"]]["name"]." ".$row["date"]." 第".$row["class"]."節",true);
 	}
 }
 ?>
@@ -91,7 +91,7 @@ include_once("../res/comhead.php");
 		?>
 		<tr>
 			<td><?php echo $acct[$borrow["userid"]]["name"]; ?></td>
-			<td><?php echo $cate[$room[$borrow["roomid"]]["cat"]]["name"]."-".$room[$borrow["roomid"]]["name"]; ?></td>
+			<td><?php echo $cate[$room[$borrow["roomid"]]["cate"]]["name"]."-".$room[$borrow["roomid"]]["name"]; ?></td>
 			<td><?php echo $borrow["date"]; ?></td>
 			<td><?php echo $borrow["class"]; ?></td>
 			<td>

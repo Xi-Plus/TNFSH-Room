@@ -58,7 +58,7 @@ function getallroom(){
 	$query->table = "roomlist";
 	$query->column = array("*");
 	$query->order = array(
-		array("cat","ASC"),
+		array("cate","ASC"),
 		array("name","ASC")
 	);
 	$row = SELECT($query);

@@ -150,7 +150,7 @@ if($showdata){
 			$noborrow=false;
 		?>
 		<tr>
-			<td><?php echo $cate[$room[$borrow["roomid"]]["cat"]]["name"]; ?></td>
+			<td><?php echo $cate[$room[$borrow["roomid"]]["cate"]]["name"]; ?></td>
 			<td><?php echo $room[$borrow["roomid"]]["name"]; ?></td>
 			<td><?php echo $borrow["date"]; ?></td>
 			<td><?php echo $borrow["class"]; ?></td>
@@ -246,7 +246,7 @@ if($showdata){
 					$noborrow=false;
 				?>
 				<tr>
-					<td><?php echo $cate[$room[$borrow["roomid"]]["cat"]]["name"]; ?></td>
+					<td><?php echo $cate[$room[$borrow["roomid"]]["cate"]]["name"]; ?></td>
 					<td><?php echo $room[$borrow["roomid"]]["name"]; ?></td>
 					<td><?php echo $borrow["date"]; ?></td>
 					<td><?php echo $borrow["class"]; ?></td>
@@ -341,7 +341,7 @@ if($showdata){
 				$noadmin=true;
 				foreach ($row as $temp) {
 					$noadmin=false;
-					?><li class="list-group-item"><?php echo $cate[$temp["cat"]]["name"]." ".$temp["name"]."<br>"; ?></li><?php
+					?><li class="list-group-item"><?php echo $cate[$temp["cate"]]["name"]." ".$temp["name"]."<br>"; ?></li><?php
 				}
 				if($noadmin){ ?><li class="list-group-item">無</li><?php }
 			}
