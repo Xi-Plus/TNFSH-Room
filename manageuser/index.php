@@ -75,13 +75,31 @@ else if($data["power"]<=1){
 	}
 }else if(isset($_POST["acctdelid"])){
 	$row = getoneacct($_POST["acctdelid"]);
-	$query=new query;
-	$query->table = "account";
-	$query->where = array(
-		array("id",$_POST["acctdelid"])
-	);
-	DELETE($query);
-	addmsgbox("info","已刪除帳戶 ".$row["name"]);
+	if($data["id"]==$_POST["acctdelid"]){
+		addmsgbox("warning","無法刪除自己的帳戶");
+	}else{
+		$row = getoneacct($_POST['acctdelid']);
+		if($row["power"]>$data["power"]){
+			addmsgbox("warning","無法刪除比自己權限高的帳戶");
+		}else {
+			$query=new query;
+			$query->table = "account";
+			$query->where = array(
+				array("id",$_POST["acctdelid"])
+			);
+			DELETE($query);
+			$query=new query;
+			$query->table = "roomlist";
+			$query->value = array(
+				array("admin","")
+			);
+			$query->where = array(
+				array("admin",$_POST["acctdelid"])
+			);
+			UPDATE($query);
+			addmsgbox("info","已刪除帳戶 ".$row["name"]);
+		}
+	}
 }
 $acct=getallacct();
 ?>
@@ -169,7 +187,7 @@ if($data["power"]>=2){
 			}
 			editpowerchange(editpower.value);
 			</script>
-			<button name="input" type="submit" class="btn btn-success">
+			<button name="input" type="submit" class="btn btn-success" onClick="if(!confirm('確認刪除?'))return false;">
 				<span class="glyphicon glyphicon-pencil"></span>
 				修改 
 			</button>
