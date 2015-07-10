@@ -38,7 +38,7 @@ function getoneacct($id){
 function getallacct(){
 	$query=new query;
 	$query->table = "account";
-	$query->column = array("*");
+	$query->column = array("id","user","name","email","power");
 	$query->order = array(
 		array("name","ASC")
 	);

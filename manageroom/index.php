@@ -90,29 +90,18 @@ else if(isset($_POST["editroom"])){
 		$query->table = "roomlist";
 		$query->value = array(
 			array("name",$_POST["name"]),
-			array("cat",$_POST["cat"])
+			array("cat",$_POST["cat"]),
+			array("admin",$_POST["admin"])
 		);
 		$query->where = array(
 			array("id",$_POST["id"])
 		);
 		UPDATE($query);
 		$row=getoneroom($_POST['id']);
-		addmsgbox("success","已修改教室 名稱為 ".$row["name"]." 分類為 ".$cate[$row["cat"]]["name"]);
+		addmsgbox("success","已修改教室 名稱為 ".$row["name"]." 分類為 ".$cate[$row["cat"]]["name"]." 管理者為 ".($row["admin"]==""?"無":$acct[$row["admin"]]["name"]));
 	}
 }
-else if(isset($_POST["roomadminid"])){
-	$query=new query;
-	$query->table = "roomlist";
-	$query->value = array(
-		array("admin",$_POST["adminid"])
-	);
-	$query->where = array(
-		array("id",$_POST['roomadminid'])
-	);
-	UPDATE($query);
-	$row=getoneroom($_POST['roomadminid']);
-	addmsgbox("success","已修改教室 ".$row["name"]." 管理者為 ".($_POST["adminid"]==""?"無":$acct[$_POST["adminid"]]["name"]));
-}
+$room=getallroom();
 ?>
 <head>
 <meta charset="UTF-8">
@@ -122,6 +111,11 @@ include_once("../res/comhead.php");
 <title>教室管理-臺南一中教室借用管理系統</title>
 </head>
 <body Marginwidth="-1" Marginheight="-1" Topmargin="0" Leftmargin="0">
+<script>
+var cate=<?php echo json_encode($cate); ?>;
+var acct=<?php echo json_encode($acct); ?>;
+var room=<?php echo json_encode($room); ?>;
+</script>
 <?php
 include_once("../res/header.php");
 if($data["power"]>=2){
@@ -245,10 +239,7 @@ if($data["power"]>=2){
 					<h2>修改</h2>
 					<div class="input-group">
 						<span class="input-group-addon">原始</span>
-						<?php
-						$room=getallroom();
-						?>
-						<select class="form-control" name="id" id="editroom" onChange="editroomname.value=$('#editroom option:selected').text();">
+						<select class="form-control" name="id" id="editroom" onChange="editroomchange(this.value)">
 						<?php
 							foreach($room as $i => $roomtemp){
 						?>
@@ -264,10 +255,9 @@ if($data["power"]>=2){
 						<input class="form-control" name="name" type="text" id="editroomname" required>
 						<span class="input-group-addon glyphicon glyphicon-pencil"></span>
 					</div>
-					<script>editroomname.value=$('#editroom option:selected').text();</script>
 					<div class="input-group">
 						<span class="input-group-addon">分類</span>
-						<select class="form-control" name="cat">
+						<select class="form-control" name="cat" id="editroomcat">
 						<?php
 							foreach($cate as $i => $catetemp){
 						?>
@@ -278,6 +268,34 @@ if($data["power"]>=2){
 						</select>
 						<span class="input-group-addon glyphicon glyphicon-tag"></span>
 					</div>
+					<div class="input-group">
+						<span class="input-group-addon">管理員</span>
+						<select class="form-control" name="admin" id="editroomadmin">
+							<option value="">無</option>
+						<?php
+							foreach($acct as $i => $accttemp){
+						?>
+							<option value="<?php echo $i; ?>" <?php echo ($roomtemp["admin"]==$i?"selected":"")?>><?php echo $accttemp["name"]; ?></option>
+						<?php
+							}
+						?>
+						</select>
+						<span class="input-group-addon glyphicon glyphicon-tag"></span>
+					</div>
+					<script>
+					function getindexbyvalue(array,value){
+						for(var i=0;i<array.length;i++){
+							if(array[i].value==value)return i;
+						}
+						return -1;
+					}
+					function editroomchange(id){
+						editroomname.value=room[id]["name"];
+						editroomcat.selectedIndex=getindexbyvalue(editroomcat,room[id]["cat"]);
+						editroomadmin.selectedIndex=getindexbyvalue(editroomadmin,room[id]["admin"]);
+					}
+					editroomchange(editroom.value);
+					</script>
 					<button name="input" type="submit" class="btn btn-success">
 						<span class="glyphicon glyphicon-pencil"></span>
 						修改 
@@ -288,10 +306,6 @@ if($data["power"]>=2){
 		<div class="row">
 			<div class="col-md-12">
 				<div style="display:none">
-					<form method="post" id="roomadmin">
-						<input name="roomadminid" type="hidden" id="roomadminid">
-						<input name="adminid" type="hidden" id="adminid">
-					</form>
 					<form method="post" id="roomdel">
 						<input name="roomdelid" type="hidden" id="roomdelid">
 					</form>
@@ -310,22 +324,7 @@ if($data["power"]>=2){
 					<tr>
 						<td><?php echo @$cate[$roomtemp["cat"]]["name"]; ?></td>
 						<td><a href="../search/?roomid=<?php echo $roomtemp["id"]; ?>"><?php echo htmlspecialchars($roomtemp["name"],ENT_QUOTES); ?></a></td>
-						<td>
-							<select onchange="
-								roomadminid.value='<?php echo $roomtemp["id"]; ?>';
-								adminid.value=this.value;
-								roomadmin.submit();
-							">
-								<option value="">無</option>
-							<?php
-								foreach($acct as $i => $accttemp){
-							?>
-								<option value="<?php echo $i; ?>" <?php echo ($roomtemp["admin"]==$i?"selected":"")?>><?php echo $accttemp["name"]; ?></option>
-							<?php
-								}
-							?>
-							</select>
-						</td>
+						<td><?php echo ($roomtemp["admin"]==""?"無":$acct[$roomtemp["admin"]]["name"]); ?></td>
 						<td>
 						<button name="input" type="button" class="btn btn-danger" onClick="if(!confirm('確認刪除?'))return false;roomdelid.value='<?php echo $roomtemp["id"]; ?>';roomdel.submit();">
 							<span class="glyphicon glyphicon-trash"></span>
