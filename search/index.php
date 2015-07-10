@@ -150,7 +150,7 @@ if(isset($_POST["delhash"])){
 $acct=getallacct();
 $date=@(strtotime($_GET["date"])==false?date("Y-m-d"):$_GET["date"]);
 $class=@(is_numeric($_GET["class"])?$_GET["class"]:"1");
-$roomid=@($_GET["roomid"]==""?"1":$_GET["roomid"]);
+$roomid=@$_GET["roomid"];
 ?>
 <head>
 <?php
@@ -173,7 +173,8 @@ include_once("../res/header.php");
 			</div>
 			<div class="input-group">
 				<span class="input-group-addon">教室</span>
-				<select class="form-control" name="roomid" onchange="search.submit();">
+				<select class="form-control" name="roomid" onchange="if(this.value!='')search.submit();">
+					<option value="" id="chooseone">請選取一個</option>
 				<?php
 					$room=getallroom();
 					foreach ($room as $roomtemp) {
@@ -187,7 +188,7 @@ include_once("../res/header.php");
 			</div>
 		</form>
 	<?php
-	if(checkroompermission($login["id"],$roomid)){
+	if($roomid&&checkroompermission($login["id"],$roomid)){
 	?>
 		<h2>管理員借用</h2>
 		<form method="post" id="borrowadminform">
@@ -237,83 +238,91 @@ include_once("../res/header.php");
 	?>
 	</div>
 	<div class="col-lg-8">
-		<div style="display:none">
-			<form method="post" id="borrow">
-				<input name="borrowone" type="hidden">
-				<input name="borrowid" type="hidden" id="borrowid">
-				<input name="borrowdate" type="hidden" id="borrowdate">
-				<input name="borrowclass" type="hidden" id="borrowclass">
-			</form>
-			<form method="post" id="delborrow">
-				<input name="delhash" type="hidden" id="delhash">
-			</form>
-		</div>
-		<h2>搜尋結果</h2>
 		<?php
-		$firstdate=strtotime($date)-date("w",strtotime($date))*86400;
-		$enddate=strtotime($date)-(date("w",strtotime($date))-6)*86400;
+		if($roomid==""){
+			?><h2>請先選取一間教室</h2><?php
+		}else {
 		?>
-		目前顯示：<?php echo date("Y-m-d",$firstdate); ?>&nbsp;至&nbsp;<?php echo date("Y-m-d",$enddate); ?>&nbsp;<?php echo $cate[$room[$roomid]["cat"]]["name"]." ".$room[$roomid]["name"]; ?>
-		
-		<div class="table-responsive">
-		<table cellspacing="0" cellpadding="5" style="font-size:20px" class="table table-hover table-condensed">
-		<tr>
-		<th></th>
-		<?php
-		$query=new query;
-		$query->table = "borrow";
-		$query->column = array("*");
-		$query->where = array(
-			array("roomid",$roomid),
-			array("date",date("Y-m-d",$firstdate),">="),
-			array("date",date("Y-m-d",$enddate),"<=")
-		);
-		$row = SELECT($query);
-		unset($borrow);
-		foreach ($row as $temp) {
-			$borrow[$temp["date"]][$temp["class"]]=$temp;
-		}
-		$week=["日","一","二","三","四","五","六"];
-		for($d=0;$d<7;$d++){
-		?>
-			<th><?php echo date("m/d",$firstdate+86400*$d)."(".$week[$d].")"?></th>
-		<?php
-		}
-		?>
-		</tr>
-		<?php
-		for($c=1;$c<=8;$c++){
-		?>
-			<tr>
-			<td>第<?php echo $c; ?>節</td>
+			<div style="display:none">
+				<form method="post" id="borrow">
+					<input name="borrowone" type="hidden">
+					<input name="borrowid" type="hidden" id="borrowid">
+					<input name="borrowdate" type="hidden" id="borrowdate">
+					<input name="borrowclass" type="hidden" id="borrowclass">
+				</form>
+				<form method="post" id="delborrow">
+					<input name="delhash" type="hidden" id="delhash">
+				</form>
+			</div>
+			<h2>搜尋結果</h2>
 			<?php
+			$firstdate=strtotime($date)-date("w",strtotime($date))*86400;
+			$enddate=strtotime($date)-(date("w",strtotime($date))-6)*86400;
+			?>
+			目前顯示：<?php echo date("Y-m-d",$firstdate); ?>&nbsp;至&nbsp;<?php echo date("Y-m-d",$enddate); ?>&nbsp;<?php echo $cate[$room[$roomid]["cat"]]["name"]." ".$room[$roomid]["name"]; ?>
+			
+			<div class="table-responsive">
+			<table cellspacing="0" cellpadding="5" style="font-size:20px" class="table table-hover table-condensed">
+			<tr>
+			<th></th>
+			<?php
+			$query=new query;
+			$query->table = "borrow";
+			$query->column = array("*");
+			$query->where = array(
+				array("roomid",$roomid),
+				array("date",date("Y-m-d",$firstdate),">="),
+				array("date",date("Y-m-d",$enddate),"<=")
+			);
+			$row = SELECT($query);
+			unset($borrow);
+			foreach ($row as $temp) {
+				$borrow[$temp["date"]][$temp["class"]]=$temp;
+			}
+			$week=["日","一","二","三","四","五","六"];
 			for($d=0;$d<7;$d++){
 			?>
-				<td align="center"><?php
-				if(isset($borrow[date("Y-m-d",$firstdate+86400*$d)][$c])){
-					if(checkborrorpermission($borrow[date("Y-m-d",$firstdate+86400*$d)][$c]["hash"],$login["id"])&&date("Y-m-d",$firstdate+86400*$d)>=date("Y-m-d")){
-					?><a href="" onClick="if(!confirm('確認取消?'))return false;delhash.value='<?php echo $borrow[date("Y-m-d",$firstdate+86400*$d)][$c]["hash"]; ?>';delborrow.submit();return false;"><?php echo $acct[$borrow[date("Y-m-d",$firstdate+86400*$d)][$c]["userid"]]["name"]; ?></a><?php
-					}else {
-						echo @$acct[$borrow[date("Y-m-d",$firstdate+86400*$d)][$c]["userid"]]["name"];
-					}
-				}else {
-					if($login!=false){
-					?>
-						<button name="input" type="submit" class="btn btn-success" value="借用" onClick="if(!confirm('確認借用?'))return false;borrowid.value='<?php echo $roomid; ?>';borrowdate.value='<?php echo date("Y-m-d",$firstdate+86400*$d); ?>';borrowclass.value='<?php echo $c; ?>';borrow.submit();" <?php echo ($firstdate+86400*$d<time()-86400?"disabled":"")?>>
-							<span class="glyphicon glyphicon-shopping-cart"></span>
-							借用 
-						</button>
-					<?php
-					}
-				}
+				<th><?php echo date("m/d",$firstdate+86400*$d)."(".$week[$d].")"?></th>
+			<?php
 			}
 			?>
 			</tr>
+			<?php
+			for($c=1;$c<=8;$c++){
+			?>
+				<tr>
+				<td>第<?php echo $c; ?>節</td>
+				<?php
+				for($d=0;$d<7;$d++){
+				?>
+					<td align="center"><?php
+					if(isset($borrow[date("Y-m-d",$firstdate+86400*$d)][$c])){
+						if(checkborrorpermission($borrow[date("Y-m-d",$firstdate+86400*$d)][$c]["hash"],$login["id"])&&date("Y-m-d",$firstdate+86400*$d)>=date("Y-m-d")){
+						?><a href="" onClick="if(!confirm('確認取消?'))return false;delhash.value='<?php echo $borrow[date("Y-m-d",$firstdate+86400*$d)][$c]["hash"]; ?>';delborrow.submit();return false;"><?php echo $acct[$borrow[date("Y-m-d",$firstdate+86400*$d)][$c]["userid"]]["name"]; ?></a><?php
+						}else {
+							echo @$acct[$borrow[date("Y-m-d",$firstdate+86400*$d)][$c]["userid"]]["name"];
+						}
+					}else {
+						if($login!=false){
+						?>
+							<button name="input" type="submit" class="btn btn-success" value="借用" onClick="if(!confirm('確認借用?'))return false;borrowid.value='<?php echo $roomid; ?>';borrowdate.value='<?php echo date("Y-m-d",$firstdate+86400*$d); ?>';borrowclass.value='<?php echo $c; ?>';borrow.submit();" <?php echo ($firstdate+86400*$d<time()-86400?"disabled":"")?>>
+								<span class="glyphicon glyphicon-shopping-cart"></span>
+								借用 
+							</button>
+						<?php
+						}
+					}
+				}
+				?>
+				</tr>
+			<?php
+			}
+			?>
+			</table>
+			</div>
 		<?php
 		}
 		?>
-		</table>
-		</div>
 	</div>
 </div>
 <?php
