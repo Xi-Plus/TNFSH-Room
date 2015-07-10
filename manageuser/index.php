@@ -15,49 +15,35 @@ else if($data["power"]<=1){
 	addmsgbox("danger","你沒有權限");
 	?><script>setTimeout(function(){location="../home";},1000);</script><?php
 }else if(isset($_POST["editpower"])){
-	if($data["id"]==$_POST["editid"]){
+	if($data["id"]==$_POST["editpower"]){
 		addmsgbox("warning","無法更改自己的權限");
 	}else{
-		$row = getoneacct($_POST['editid']);
+		$row = getoneacct($_POST['editpower']);
 		if($row["power"]>$data["power"]){
 			addmsgbox("warning","無法更改比自己權限高的帳戶");
-		}else if($_POST["editpower"]>$data["power"]){
+		}else if($_POST["power"]>$data["power"]){
 			addmsgbox("warning","無法將權限調比自己高");
 		}else {
 			$query=new query;
 			$query->table = "account";
 			$query->value = array(
-				array("power",$_POST["editpower"])
+				array("power",$_POST["power"])
 			);
 			$query->where = array(
-				array("id",$_POST["editid"])
+				array("id",$_POST["editpower"])
 			);
 			UPDATE($query);
-			addmsgbox("success","已將 ".$row["user"]."(".$row["name"].") 的權限更改為 ".$powername[$_POST["editpower"]]);
-			if($_POST["editpower"]<=0){
+			addmsgbox("success","已將 ".$row["user"]."(".$row["name"].") 的權限更改為 ".$powername[$_POST["power"]]);
+			if($_POST["power"]<=0){
 				$query=new query;
 				$query->table = "session";
 				$query->where = array(
-					array("id",$_POST["editid"])
+					array("id",$_POST["editpower"])
 				);
 				DELETE($query);
 			}
 		}
 	}
-}else if(isset($_POST["editroomlist"])){
-	$row = getoneacct($_POST['editid']);
-	$query=new query;
-	$query->table = "account";
-	$temp=json_decode($row["power"]);
-	$temp->room=explode(",",$_POST["editroomlist"]);
-	$query->value = array(
-		array("power",json_encode($temp))
-	);
-	$query->where = array(
-		array("id",$_POST["editid"])
-	);
-	UPDATE($query);
-	addmsgbox("success","已將 ".$row["user"]."(".$row["name"].") 的教室權限更改為 ".$_POST["editroomlist"]);
 }else if(isset($_POST['suser'])){
 	$row = getoneacct($_POST['suser']);
 	if($row!==null){
@@ -87,7 +73,17 @@ else if($data["power"]<=1){
 		INSERT($query);
 		addmsgbox("success","新增成功");
 	}
+}else if(isset($_POST["acctdelid"])){
+	$row = getoneacct($_POST["acctdelid"]);
+	$query=new query;
+	$query->table = "account";
+	$query->where = array(
+		array("id",$_POST["acctdelid"])
+	);
+	DELETE($query);
+	addmsgbox("info","已刪除帳戶 ".$row["name"]);
 }
+$acct=getallacct();
 ?>
 <head>
 <?php
@@ -97,6 +93,9 @@ include_once("../res/comhead.php");
 <link href="manageuser.css" rel="stylesheet" type="text/css">
 </head>
 <body Marginwidth="-1" Marginheight="-1" Topmargin="0" Leftmargin="0">
+<script>
+var acct=<?php echo json_encode($acct); ?>;
+</script>
 <?php
 include_once("../res/header.php");
 if($data["power"]>=2){
@@ -136,13 +135,52 @@ if($data["power"]>=2){
 			</button>
 			</table>
 		</form>
+		<h2>修改權限</h2>
+		<form method="post">
+			<div class="input-group">
+				<span class="input-group-addon">帳號</span>
+				<select class="form-control" name="editpower" id="editpower" onChange="editpowerchange(this.value);">
+				<?php
+					foreach($acct as $i => $accttemp){
+				?>
+					<option value="<?php echo $i; ?>"><?php echo $accttemp["name"]; ?></option>
+				<?php
+					}
+				?>
+				</select>
+				<span class="input-group-addon glyphicon glyphicon-user"></span>
+			</div>
+			<div class="input-group">
+				<span class="input-group-addon">權限</span>
+				<select class="form-control" name="power" id="editpowerpower">
+				<?php
+					for($i=0;$i<=2;$i++){
+				?>
+					<option value="<?php echo $i; ?>" <?php echo ($accttemp["power"]==$i?"selected":"")?>><?php echo $powername[$i]; ?></option>
+				<?php
+					}
+				?>
+				</select>
+				<span class="input-group-addon glyphicon glyphicon-tower"></span>
+			</div>
+			<script>
+			function editpowerchange(id){
+				editpowerpower.selectedIndex=acct[id]["power"];
+			}
+			editpowerchange(editpower.value);
+			</script>
+			<button name="input" type="submit" class="btn btn-success">
+				<span class="glyphicon glyphicon-pencil"></span>
+				修改 
+			</button>
+			</table>
+		</form>
 	</div>
 	<div class="col-md-8">
 		<h2>使用者管理</h2>
 		<div style="display:none">
-			<form method="post" id="editpermission">
-				<input name="editid" type="hidden" id="editpermissionid">
-				<input name="editpower" type="hidden" id="editpower">
+			<form method="post" id="acctdel">
+				<input name="acctdelid" type="hidden" id="acctdelid">
 			</form>
 		</div>
 		<div class="table-responsive">
@@ -152,6 +190,7 @@ if($data["power"]>=2){
 			<th>姓名</th>
 			<th>Email</th>
 			<th>權限</th>
+			<th>刪除</th>
 		</tr>
 		<?php
 		$acct = getallacct();
@@ -161,20 +200,12 @@ if($data["power"]>=2){
 				<td><a href="../user/?id=<?php echo $accttemp["id"]; ?>"><?php echo het($accttemp["user"]); ?></a></td>
 				<td><?php echo het($accttemp["name"]); ?></td>
 				<td><?php echo $accttemp["email"]; ?></td>
+				<td><?php echo $powername[$accttemp["power"]]; ?></td>
 				<td>
-					<select class="form-control" onchange="
-						editpermissionid.value='<?php echo $accttemp["id"]; ?>';
-						editpower.value=this.value;
-						editpermission.submit();
-					">
-					<?php
-						for($i=0;$i<=2;$i++){
-					?>
-						<option value="<?php echo $i; ?>" <?php echo ($accttemp["power"]==$i?"selected":"")?>><?php echo $powername[$i]; ?></option>
-					<?php
-						}
-					?>
-					</select>
+					<button name="input" type="button" class="btn btn-danger" onClick="if(!confirm('確認刪除?'))return false;acctdelid.value='<?php echo $accttemp["id"]; ?>';acctdel.submit();">
+						<span class="glyphicon glyphicon-trash"></span>
+						刪除 
+					</button>
 				</td>
 			</tr>
 			<?php

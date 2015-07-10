@@ -346,10 +346,10 @@ if($data["power"]>=2){
 						<td><a href="../search/?roomid=<?php echo $roomtemp["id"]; ?>"><?php echo htmlspecialchars($roomtemp["name"],ENT_QUOTES); ?></a></td>
 						<td><?php echo ($roomtemp["admin"]==""?"無":$acct[$roomtemp["admin"]]["name"]); ?></td>
 						<td>
-						<button name="input" type="button" class="btn btn-danger" onClick="if(!confirm('確認刪除?'))return false;roomdelid.value='<?php echo $roomtemp["id"]; ?>';roomdel.submit();">
-							<span class="glyphicon glyphicon-trash"></span>
-							刪除 
-						</button>
+							<button name="input" type="button" class="btn btn-danger" onClick="if(!confirm('確認刪除?'))return false;roomdelid.value='<?php echo $roomtemp["id"]; ?>';roomdel.submit();">
+								<span class="glyphicon glyphicon-trash"></span>
+								刪除 
+							</button>
 						</td>
 					</tr>
 					<?php
