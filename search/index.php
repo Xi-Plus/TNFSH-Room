@@ -264,8 +264,8 @@ include_once("../res/header.php");
 					borrowclass.value=cla;
 					borrow.submit();
 				}
-				function checkdelborrow(id){
-					if(!confirm('確認取消?'))return false;
+				function checkdelborrow(id,other){
+					if(!confirm('確認取消?'+(other?'\n注意!這是其他人的借用':'')))return false;
 					delhash.value=id;
 					delborrow.submit();
 					return false;
@@ -308,7 +308,7 @@ include_once("../res/header.php");
 					if(isset($borrow[date("Y-m-d",$firstdate+86400*$d)][$c])){
 						if(checkborrorpermission($borrow[date("Y-m-d",$firstdate+86400*$d)][$c]["hash"],$login["id"])&&date("Y-m-d",$firstdate+86400*$d)>=date("Y-m-d")){
 						?>
-							<button name="input" type="button" class="btn btn-danger" onClick="checkdelborrow('<?php echo $borrow[date("Y-m-d",$firstdate+86400*$d)][$c]["hash"]; ?>');">
+							<button name="input" type="button" class="btn btn-danger" onClick="checkdelborrow('<?php echo $borrow[date("Y-m-d",$firstdate+86400*$d)][$c]["hash"]; ?>',<?php echo ($borrow[date("Y-m-d",$firstdate+86400*$d)][$c]["userid"]==$login["id"]?"false":"true"); ?>);">
 								<span class="glyphicon glyphicon-trash"></span>
 								<?php echo $acct[$borrow[date("Y-m-d",$firstdate+86400*$d)][$c]["userid"]]["name"]; ?> 
 							</button>
@@ -322,9 +322,9 @@ include_once("../res/header.php");
 						<?php
 						}
 					}else {
-						if($login!=false){
+						if($login!=false&&$firstdate+86400*$d>=time()-86400){
 						?>
-							<button name="input" type="button" class="btn btn-success" value="借用" onClick="checkborrow('<?php echo $roomid; ?>','<?php echo date("Y-m-d",$firstdate+86400*$d); ?>','<?php echo $c; ?>');" <?php echo ($firstdate+86400*$d<time()-86400?"disabled":"")?>>
+							<button name="input" type="button" class="btn btn-success" value="借用" onClick="checkborrow('<?php echo $roomid; ?>','<?php echo date("Y-m-d",$firstdate+86400*$d); ?>','<?php echo $c; ?>');">
 								<span class="glyphicon glyphicon-shopping-cart"></span>
 								借用 
 							</button>
