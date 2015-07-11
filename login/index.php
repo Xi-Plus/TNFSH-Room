@@ -81,7 +81,6 @@ fclose ($fp);
 include_once("../res/comhead.php");
 ?>
 <title>登入-臺南一中教室借用管理系統</title>
-<link href="login.css" rel="stylesheet" type="text/css">
 </head>
 <body Marginwidth="-1" Marginheight="-1" Topmargin="0" Leftmargin="0">
 <?php

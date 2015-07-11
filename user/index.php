@@ -108,7 +108,6 @@ $editdata = getoneacct($editid);
 include_once("../res/comhead.php");
 ?>
 <title>個人借用查詢-教室借用管理系統</title>
-<link href="user.css" rel="stylesheet" type="text/css">
 </head>
 <body Marginwidth="-1" Marginheight="-1" Topmargin="0" Leftmargin="0">
 <?php

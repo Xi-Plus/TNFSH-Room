@@ -1,7 +1,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="../res/css/bootstrap.min.css" rel="stylesheet">
-<link href="../res/css/css.css" rel="stylesheet" type="text/css">
 <script src="../res/js/jquery.min.js"></script>
 <script src="../res/js/bootstrap.min.js"></script>
 <link rel="SHORTCUT ICON" href="http://www.tnfsh.tn.edu.tw/ezfiles/0/1000/sys_1000_5899370_87126.ico" type="image/x-icon">

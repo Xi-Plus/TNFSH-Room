@@ -108,7 +108,6 @@ $acct=getallacct();
 include_once("../res/comhead.php");
 ?>
 <title>使用者管理-臺南一中教室借用管理系統</title>
-<link href="manageuser.css" rel="stylesheet" type="text/css">
 </head>
 <body Marginwidth="-1" Marginheight="-1" Topmargin="0" Leftmargin="0">
 <script>
