@@ -122,6 +122,13 @@ if($showdata){
 			</form>
 		</div>
 		<h2>目前借用</h2>
+		<script>
+			function checkdelborrow(id){
+				if(!confirm('確認取消?'))return false;
+				delhash.value=id;
+				delborrow.submit();
+			}
+		</script>
 		<table width="0" border="0" cellspacing="10" cellpadding="0" class="table">
 		<tr>
 			<th>分類</td>
@@ -156,7 +163,7 @@ if($showdata){
 			<td><?php echo $borrow["class"]; ?></td>
 			<td><?php echo ($borrow["valid"]?"通過":"審核中"); ?></td>
 			<td>
-			<button name="input" type="button" class="btn btn-danger" onClick="if(!confirm('確認取消?'))return false;delhash.value='<?php echo $borrow["hash"]; ?>';delborrow.submit();">
+			<button name="input" type="button" class="btn btn-danger" onClick="checkdelborrow('<?php echo $borrow["hash"]; ?>');">
 				<span class="glyphicon glyphicon-trash"></span>
 				取消 
 			</button>

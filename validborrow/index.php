@@ -62,6 +62,19 @@ include_once("../res/comhead.php");
 			</form>
 		</div>
 		<h2>借用審核</h2>
+		<script>
+			function checkvaildborrow(id,istrue){
+				if(istrue){
+					if(!confirm('確認拒絕?'))return false;
+					valid.value='true';
+				}else {
+					if(!confirm('確認拒絕?'))return false;
+					valid.value='false';
+				}
+				hash.value=id;
+				validborrow.submit();
+			}
+		</script>
 		<table width="0" border="0" cellspacing="10" cellpadding="0" class="table">
 		<tr>
 			<th>姓名</th>
@@ -96,11 +109,11 @@ include_once("../res/comhead.php");
 			<td><?php echo $borrow["class"]; ?></td>
 			<td>
 			
-			<button name="input" type="button" class="btn btn-success" onClick="if(!confirm('確認允許?'))return false;hash.value='<?php echo $borrow["hash"]; ?>';valid.value='true';validborrow.submit();" >
+			<button name="input" type="button" class="btn btn-success" onClick="checkvaildborrow('<?php echo $borrow["hash"]; ?>',true);" >
 				<span class="glyphicon glyphicon-ok"></span>
 				允許 
 			</button>
-			<button name="input" type="button" class="btn btn-danger" onClick="if(!confirm('確認拒絕?'))return false;hash.value='<?php echo $borrow["hash"]; ?>';valid.value='false';validborrow.submit();" >
+			<button name="input" type="button" class="btn btn-danger" onClick="checkvaildborrow('<?php echo $borrow["hash"]; ?>',false);" >
 				<span class="glyphicon glyphicon-remove"></span>
 				拒絕 
 		</tr>

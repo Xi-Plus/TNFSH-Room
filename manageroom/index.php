@@ -178,6 +178,13 @@ if($data["power"]>=2){
 		<div class="row">
 			<div class="col-md-12">
 				<div class="table-responsive">
+				<script>
+					function checkdelcate(id){
+						if(!confirm('確認刪除?'))return false;
+						catedelid.value=id;
+						catedel.submit();
+					}
+				</script>
 				<table border="1" cellspacing="0" cellpadding="2" class="table table-hover table-condensed">
 				<div style="display:none">
 					<form method="post" id="catedel">
@@ -194,7 +201,7 @@ if($data["power"]>=2){
 				<tr>
 					<td><?php echo $catetemp["name"]; ?></td>
 					<td>
-						<button name="input" type="button" class="btn btn-danger" onClick="if(!confirm('確認刪除?'))return false;catedelid.value='<?php echo $i; ?>';catedel.submit();" >
+						<button name="input" type="button" class="btn btn-danger" onClick="checkdelcate('<?php echo $i; ?>');" >
 						<span class="glyphicon glyphicon-trash"></span>
 						刪除 
 						</button>
@@ -331,6 +338,13 @@ if($data["power"]>=2){
 					</form>
 				</div>
 				<div class="table-responsive">
+				<script>
+					function checkdelroom(id){
+						if(!confirm('確認刪除?'))return false;
+						roomdelid.value=id;
+						roomdel.submit();
+					}
+				</script>
 				<table border="1" cellspacing="0" cellpadding="2" class="table table-hover table-condensed">
 				<tr>
 					<th>分類</th>
@@ -346,7 +360,7 @@ if($data["power"]>=2){
 						<td><a href="../search/?roomid=<?php echo $roomtemp["id"]; ?>"><?php echo htmlspecialchars($roomtemp["name"],ENT_QUOTES); ?></a></td>
 						<td><?php echo ($roomtemp["admin"]==""?"無":$acct[$roomtemp["admin"]]["name"]); ?></td>
 						<td>
-							<button name="input" type="button" class="btn btn-danger" onClick="if(!confirm('確認刪除?'))return false;roomdelid.value='<?php echo $roomtemp["id"]; ?>';roomdel.submit();">
+							<button name="input" type="button" class="btn btn-danger" onClick="checkdelroom('<?php echo $roomtemp["id"]; ?>');">
 								<span class="glyphicon glyphicon-trash"></span>
 								刪除 
 							</button>

@@ -256,6 +256,21 @@ include_once("../res/header.php");
 			目前顯示：<?php echo date("Y-m-d",$firstdate); ?>&nbsp;至&nbsp;<?php echo date("Y-m-d",$enddate); ?>&nbsp;<?php echo $cate[$room[$roomid]["cate"]]["name"]." ".$room[$roomid]["name"]; ?>
 			
 			<div class="table-responsive">
+			<script>
+				function checkborrow(id,date,cla){
+					if(!confirm('確認借用?'))return false;
+					borrowid.value=id;
+					borrowdate.value=date;
+					borrowclass.value=cla;
+					borrow.submit();
+				}
+				function checkdelborrow(id){
+					if(!confirm('確認取消?'))return false;
+					delhash.value=id;
+					delborrow.submit();
+					return false;
+				}
+			</script>
 			<table cellspacing="0" cellpadding="5" style="font-size:20px" class="table table-hover table-condensed">
 			<tr>
 			<th></th>
@@ -292,14 +307,24 @@ include_once("../res/header.php");
 					<td align="center"><?php
 					if(isset($borrow[date("Y-m-d",$firstdate+86400*$d)][$c])){
 						if(checkborrorpermission($borrow[date("Y-m-d",$firstdate+86400*$d)][$c]["hash"],$login["id"])&&date("Y-m-d",$firstdate+86400*$d)>=date("Y-m-d")){
-						?><a href="" onClick="if(!confirm('確認取消?'))return false;delhash.value='<?php echo $borrow[date("Y-m-d",$firstdate+86400*$d)][$c]["hash"]; ?>';delborrow.submit();return false;"><?php echo $acct[$borrow[date("Y-m-d",$firstdate+86400*$d)][$c]["userid"]]["name"]; ?></a><?php
+						?>
+							<button name="input" type="button" class="btn btn-danger" onClick="checkdelborrow('<?php echo $borrow[date("Y-m-d",$firstdate+86400*$d)][$c]["hash"]; ?>');">
+								<span class="glyphicon glyphicon-trash"></span>
+								<?php echo $acct[$borrow[date("Y-m-d",$firstdate+86400*$d)][$c]["userid"]]["name"]; ?> 
+							</button>
+						<?php
 						}else {
-							echo @$acct[$borrow[date("Y-m-d",$firstdate+86400*$d)][$c]["userid"]]["name"];
+						?>
+							<button name="input" type="button" class="btn btn-default" disabled>
+								<span class="glyphicon glyphicon-user"></span>
+								<?php echo $acct[$borrow[date("Y-m-d",$firstdate+86400*$d)][$c]["userid"]]["name"]; ?> 
+							</button>
+						<?php
 						}
 					}else {
 						if($login!=false){
 						?>
-							<button name="input" type="submit" class="btn btn-success" value="借用" onClick="if(!confirm('確認借用?'))return false;borrowid.value='<?php echo $roomid; ?>';borrowdate.value='<?php echo date("Y-m-d",$firstdate+86400*$d); ?>';borrowclass.value='<?php echo $c; ?>';borrow.submit();" <?php echo ($firstdate+86400*$d<time()-86400?"disabled":"")?>>
+							<button name="input" type="button" class="btn btn-success" value="借用" onClick="checkborrow('<?php echo $roomid; ?>','<?php echo date("Y-m-d",$firstdate+86400*$d); ?>','<?php echo $c; ?>');" <?php echo ($firstdate+86400*$d<time()-86400?"disabled":"")?>>
 								<span class="glyphicon glyphicon-shopping-cart"></span>
 								借用 
 							</button>

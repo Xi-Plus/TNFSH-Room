@@ -201,6 +201,13 @@ if($data["power"]>=2){
 			</form>
 		</div>
 		<div class="table-responsive">
+		<script>
+			function checkdelacct(id){
+				if(!confirm('確認刪除?'))return false;
+				acctdelid.value=id;
+				acctdel.submit();
+			}
+		</script>
 		<table border="1" cellspacing="0" cellpadding="2" class="table table-hover table-condensed">
 		<tr>
 			<th>帳號</th>
@@ -219,7 +226,7 @@ if($data["power"]>=2){
 				<td><?php echo $accttemp["email"]; ?></td>
 				<td><?php echo $powername[$accttemp["power"]]; ?></td>
 				<td>
-					<button name="input" type="button" class="btn btn-danger" onClick="if(!confirm('確認刪除?'))return false;acctdelid.value='<?php echo $accttemp["id"]; ?>';acctdel.submit();">
+					<button name="input" type="button" class="btn btn-danger" onClick="checkdelacct('<?php echo $accttemp["id"]; ?>');">
 						<span class="glyphicon glyphicon-trash"></span>
 						刪除 
 					</button>
