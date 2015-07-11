@@ -93,12 +93,12 @@ include_once("../res/comhead.php");
 			<form method="post">
 				<div class="input-group">
 					<span class="input-group-addon">帳號</span>
-					<input class="form-control" name="user" type="text" value="<?php echo @$_POST['user'];?>" maxlength="32">
+					<input class="form-control" name="user" type="text" value="<?php echo @$_POST['user'];?>" maxlength="32" required>
 					<span class="input-group-addon glyphicon glyphicon-user"></span>
 				</div>
 				<div class="input-group">
 					<span class="input-group-addon">密碼</span>
-					<input class="form-control" name="pwd" type="password">
+					<input class="form-control" name="pwd" type="password" required>
 					<span class="input-group-addon glyphicon glyphicon-asterisk"></span>
 				</div>
 				<button type="submit" class="btn btn-success">
