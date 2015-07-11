@@ -125,13 +125,7 @@ if(isset($_POST["borrowone"])){
 	}
 }
 if(isset($_POST["delhash"])){
-	$query=new query;
-	$query->table = "borrow";
-	$query->column = array("*");
-	$query->where = array(
-		array("hash",$_POST["delhash"])
-	);
-	$borrow=fetchone(SELECT($query));
+	$borrow=getoneborrow($_POST["delhash"]);
 	if($borrow===null){
 		addmsgbox("warning","查無此借用");
 	}else if(checkborrorpermission($_POST["delhash"],$login["id"])){
@@ -142,7 +136,7 @@ if(isset($_POST["delhash"])){
 		);
 		DELETE($query);
 		$room=getoneroom($borrow["roomid"]);
-		addmsgbox("info","已刪除借用 ".$cate[$borrow["roomid"]]["name"]."-".$room["name"]." 日期 ".$borrow["date"]." 第".$borrow["class"]."節");
+		addmsgbox("info","已刪除借用 ".$cate[$room["cate"]]["name"]."-".$room["name"]." 日期 ".$borrow["date"]." 第".$borrow["class"]."節");
 	}else {
 		addmsgbox("danger","你沒有權限");
 	}

@@ -82,10 +82,9 @@ if(isset($_POST["sid"])&&$editid!=$_POST["sid"]){
 	}
 }
 $cate=getallcate();
-$room=getallroom();
 if(isset($_POST["delhash"])){
-	$row=getoneborrow($_POST["delhash"]);
-	if($row===null){
+	$borrow=getoneborrow($_POST["delhash"]);
+	if($borrow===null){
 		addmsgbox("warning","查無此借用");
 	}else if(checkborrorpermission($_POST["delhash"],$login["id"])){
 		$query=new query;
@@ -94,11 +93,13 @@ if(isset($_POST["delhash"])){
 			array("hash",$_POST["delhash"])
 		);
 		DELETE($query);
-		addmsgbox("info","已刪除借用 ".$cate[$row["roomid"]]["name"]."-".$room[$row["roomid"]]["name"]." 日期 ".$row["date"]." 第".$row["class"]."節");
+		$room=getoneroom($borrow["roomid"]);
+		addmsgbox("info","已刪除借用 ".$cate[$room["cate"]]["name"]."-".$room["name"]." 日期 ".$borrow["date"]." 第".$borrow["class"]."節");
 	}else {
 		addmsgbox("danger","你沒有權限");
 	}
 }
+$room=getallroom();
 $editdata = getoneacct($editid);
 }
 ?>
