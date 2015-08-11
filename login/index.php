@@ -45,32 +45,30 @@ if(checklogin()){
 			loginsuccess($row);
 		}
 	}else if($row["pwd"]==""){
-
-$user_id = $_POST['user'];
-$user_passwd = $_POST['pwd'];
-		$fp = fsockopen ("mail.tnfsh.tn.edu.tw", 110, $errno, $errstr, 10);
+		$user_id = $_POST['user'];
+		$user_passwd = $_POST['pwd'];
+		$fp = @fsockopen ("mail.tnfsh.tn.edu.tw", 110, $errno, $errstr, 10);
 		if (!$fp) {
 			addmsgbox("danger","連接伺服器發生錯誤: $errstr ($errno)");
+		}else{
+			fgets ($fp,128);
+			fputs ($fp, "USER $user_id
+");
+			fgets ($fp,128);
+			fputs ($fp, "PASS $user_passwd
+");
+			if (!feof($fp)){
+				if(substr(fgets($fp,128),0,14)=="+OK Logged in."){
+					loginsuccess($row);
+				}else{
+					addmsgbox("danger","密碼錯誤");
+				}
+			}
+			fputs ($fp, "QUIT
+");
+			fclose ($fp);
 		}
-		else{
-fgets ($fp,128);
-fputs ($fp, "USER $user_id
-");
-fgets ($fp,128);
-fputs ($fp, "PASS $user_passwd
-");
-if (!feof($fp)) {
-	if(substr(fgets($fp,128),0,14)=="+OK Logged in."){
-		loginsuccess($row);
-	}else {
-		addmsgbox("danger","密碼錯誤");
-	}
-}
-fputs ($fp, "QUIT
-");
-}
-fclose ($fp);
-	}else {
+	}else{
 		addmsgbox("danger","密碼錯誤");
 	}
 }
