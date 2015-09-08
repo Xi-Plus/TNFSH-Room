@@ -6,6 +6,7 @@ include_once("../func/checkpermission.php");
 include_once("../func/sql.php");
 include_once("../func/common.php");
 include_once("../func/data.php");
+$data=checklogin();
 ?>
 <head>
 <?php
@@ -48,11 +49,21 @@ include_once("../res/header.php");
 			$noborrow=false;
 		?>
 		<tr>
+			<?php if($data["power"]>=2){ ?>
+			<td><a href="../user/?id=<?php echo $borrow["userid"] ?>"><?php echo $acct[$borrow["userid"]]["name"]; ?></a></td>
+			<?php }else { ?>
 			<td><?php echo $acct[$borrow["userid"]]["name"]; ?></td>
-			<td><?php echo $cate[$room[$borrow["roomid"]]["cate"]]["name"]."-".$room[$borrow["roomid"]]["name"]; ?></td>
+			<?php } ?>
+			<td><a href="../search/?roomid=<?php echo $borrow["roomid"]; ?>"><?php echo $cate[$room[$borrow["roomid"]]["cate"]]["name"]."-".$room[$borrow["roomid"]]["name"]; ?></a></td>
 			<td><?php echo $borrow["date"]; ?></td>
 			<td><?php echo $borrow["class"]; ?></td>
-			<td><?php echo ($borrow["valid"]?"通過":"審核中"); ?></td>
+			<?php if($borrow["valid"]){ ?>
+			<td>通過</td>
+			<?php }else if($data["power"]>=2){ ?>
+			<td><a href="../validborrow">審核中</a></td>
+			<?php }else { ?>
+			<td>審核中</td>
+			<?php } ?>
 		</tr>
 		<?php
 		}
