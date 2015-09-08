@@ -21,25 +21,25 @@ $login=checklogin();
 						<img src="http://www.tnfsh.tn.edu.tw/ezfiles/0/1000/sys_1000_5047883_27719.png" alt="臺南第一高級中學" height="30px">
 					</div>
 					<div style="float: left;">
-						&nbsp;&nbsp;<span style="font-weight: bold; font-size: px; font-family: '標楷體';">教室借用管理系統</span><br>
+						&nbsp;&nbsp;<span style="font-weight: bold; font-size: px; font-family: '標楷體';">場地預約管理系統</span><br>
 					</div>
 				</a>
 			</div>
 			<nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
 				<ul class="nav navbar-nav">
 					<li>
-						<a href="../home">最近借用</a>
+						<a href="../home">最近預約</a>
 					</li>
 					<li>
-						<a href="../search">所有借用查詢</a>
+						<a href="../search">所有預約查詢</a>
 					</li>
 					<li>
-						<a href="../user">個人借用查詢</a>
+						<a href="../user">個人預約查詢</a>
 					</li>
 					<?php 
 					if(@checkroompermission($login["id"])){ ?>
 					<li>
-						<a href="../validborrow">借用審核
+						<a href="../validborrow">預約審核
 						<?php
 						$query=new query;
 						$query->table = "borrow";
@@ -60,7 +60,7 @@ $login=checklogin();
 					</li>
 					<?php }if(@$login["power"]>=2){ ?>
 					<li>
-						<a href="../manageroom">教室管理</a>
+						<a href="../manageroom">場地管理</a>
 					</li>
 					<li>
 						<a href="../manageuser">使用者管理</a>

@@ -85,7 +85,7 @@ $cate=getallcate();
 if(isset($_POST["delhash"])){
 	$borrow=getoneborrow($_POST["delhash"]);
 	if($borrow===null){
-		addmsgbox("warning","查無此借用");
+		addmsgbox("warning","查無此預約");
 	}else if(checkborrorpermission($_POST["delhash"],$login["id"])){
 		$query=new query;
 		$query->table = "borrow";
@@ -94,7 +94,7 @@ if(isset($_POST["delhash"])){
 		);
 		DELETE($query);
 		$room=getoneroom($borrow["roomid"]);
-		addmsgbox("info","已刪除借用 ".$cate[$room["cate"]]["name"]."-".$room["name"]." 日期 ".$borrow["date"]." 第".$borrow["class"]."節");
+		addmsgbox("info","已刪除預約 ".$cate[$room["cate"]]["name"]."-".$room["name"]." 日期 ".$borrow["date"]." 第".$borrow["class"]."節");
 	}else {
 		addmsgbox("danger","你沒有權限");
 	}
@@ -107,7 +107,7 @@ $editdata = getoneacct($editid);
 <?php
 include_once("../res/comhead.php");
 ?>
-<title>個人借用查詢-教室借用管理系統</title>
+<title>個人預約查詢-場地預約管理系統</title>
 </head>
 <body Marginwidth="-1" Marginheight="-1" Topmargin="0" Leftmargin="0">
 <?php
@@ -121,7 +121,7 @@ if($showdata){
 				<input name="delhash" type="hidden" id="delhash">
 			</form>
 		</div>
-		<h2>目前借用</h2>
+		<h2>目前預約</h2>
 		<script>
 			function checkdelborrow(id){
 				if(!confirm('確認取消?'))return false;
@@ -132,7 +132,7 @@ if($showdata){
 		<table width="0" border="0" cellspacing="10" cellpadding="0" class="table">
 		<tr>
 			<th>分類</td>
-			<th>教室</td>
+			<th>場地</td>
 			<th>日期</td>
 			<th>課堂</td>
 			<th>審核</td>
@@ -174,7 +174,7 @@ if($showdata){
 		if($noborrow){
 		?>
 		<tr>
-			<td colspan="6" align="center">無任何借用</td>
+			<td colspan="6" align="center">無任何預約</td>
 		</tr>
 		<?php
 		}
@@ -182,7 +182,7 @@ if($showdata){
 		</table>
 	</div>
 	<div class="col-md-4">
-		<h2>歷史借用</h2>
+		<h2>歷史預約</h2>
 		<div id="norecord">
 		<button type="button" class="btn btn-default" id="button0" onclick="next(-1);">
 			<span class="glyphicon glyphicon-chevron-left"></span>
@@ -244,7 +244,7 @@ if($showdata){
 				<table width="0" border="0" cellspacing="10" cellpadding="0" class="table">
 				<tr>
 					<th>分類</th>
-					<th>教室</th>
+					<th>場地</th>
 					<th>日期</th>
 					<th>課堂</th>
 				</tr>
@@ -271,12 +271,12 @@ if($showdata){
 			<table width="0" border="0" cellspacing="10" cellpadding="0" class="table">
 			<tr>
 				<th>分類</th>
-				<th>教室</th>
+				<th>場地</th>
 				<th>日期</th>
 				<th>課堂</th>
 			</tr>
 			<tr>
-				<td colspan="4" align="center">無任何借用</td>
+				<td colspan="4" align="center">無任何預約</td>
 			</tr>
 			</table>
 		<?php
@@ -334,7 +334,7 @@ if($showdata){
 		<ul class="list-group">
 			<li class="list-group-item list-group-item-info">全域權限</li>
 			<li class="list-group-item"><?php echo $powername[$editdata["power"]]; ?></li>
-			<li class="list-group-item list-group-item-info">教室管理權限</li>
+			<li class="list-group-item list-group-item-info">場地管理權限</li>
 		<?php
 			if($editdata["power"]>=2){ ?><li class="list-group-item">全部</li><?php
 			}else {

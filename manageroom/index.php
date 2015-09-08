@@ -65,7 +65,7 @@ if(isset($_POST["roomdelid"])){
 		array("id",$_POST["roomdelid"])
 	);
 	DELETE($query);
-	addmsgbox("info","已刪除教室 名稱為 ".$row["name"]);
+	addmsgbox("info","已刪除場地 名稱為 ".$row["name"]);
 }
 else if(isset($_POST["addroom"])){
 	if($_POST["name"]=="")addmsgbox("warning","名稱為空");
@@ -81,7 +81,7 @@ else if(isset($_POST["addroom"])){
 			array("admin",$_POST["admin"])
 		);
 		INSERT($query);
-		addmsgbox("success","已增加教室 名稱為 ".$_POST["name"]." 分類為 ".$cate[$_POST["cate"]]["name"]." 管理者為 ".($_POST["admin"]==""?"無":$acct[$_POST["admin"]]["name"]));
+		addmsgbox("success","已增加場地 名稱為 ".$_POST["name"]." 分類為 ".$cate[$_POST["cate"]]["name"]." 管理者為 ".($_POST["admin"]==""?"無":$acct[$_POST["admin"]]["name"]));
 	}
 }
 else if(isset($_POST["editroom"])){
@@ -99,7 +99,7 @@ else if(isset($_POST["editroom"])){
 		);
 		UPDATE($query);
 		$row=getoneroom($_POST['id']);
-		addmsgbox("success","已修改教室 名稱為 ".$row["name"]." 分類為 ".$cate[$row["cate"]]["name"]." 管理者為 ".($row["admin"]==""?"無":$acct[$row["admin"]]["name"]));
+		addmsgbox("success","已修改場地 名稱為 ".$row["name"]." 分類為 ".$cate[$row["cate"]]["name"]." 管理者為 ".($row["admin"]==""?"無":$acct[$row["admin"]]["name"]));
 	}
 }
 $room=getallroom();
@@ -109,7 +109,7 @@ $room=getallroom();
 <?php
 include_once("../res/comhead.php");
 ?>
-<title>教室管理-臺南一中教室借用管理系統</title>
+<title>場地管理-臺南一中場地預約管理系統</title>
 </head>
 <body Marginwidth="-1" Marginheight="-1" Topmargin="0" Leftmargin="0">
 <script>
@@ -216,7 +216,7 @@ if($data["power"]>=2){
 		</div>
 	</div>
 	<div class="col-md-6">
-		<h2>教室管理</h2>
+		<h2>場地管理</h2>
 		<div class="row">
 			<div class="col-sm-6">
 				<form method="post">

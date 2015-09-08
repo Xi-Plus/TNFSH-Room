@@ -12,7 +12,7 @@ include_once("../func/msgbox.php");
 <?php
 include_once("../res/comhead.php");
 ?>
-<title>關於-臺南一中教室借用管理系統</title>
+<title>關於-臺南一中場地預約管理系統</title>
 </head>
 <body topmargin="0" leftmargin="0" bottommargin="0">
 <?php

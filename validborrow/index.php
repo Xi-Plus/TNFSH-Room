@@ -47,7 +47,7 @@ if(isset($_POST['valid'])){
 <?php
 include_once("../res/comhead.php");
 ?>
-<title>借用審核-臺南一中教室借用管理系統</title>
+<title>預約審核-臺南一中場地預約管理系統</title>
 </head>
 <body Marginwidth="-1" Marginheight="-1" Topmargin="0" Leftmargin="0">
 <?php
@@ -61,7 +61,7 @@ include_once("../res/comhead.php");
 				<input name="valid" type="hidden" id="valid">
 			</form>
 		</div>
-		<h2>借用審核</h2>
+		<h2>預約審核</h2>
 		<script>
 			function checkvaildborrow(id,istrue){
 				if(istrue){
@@ -78,7 +78,7 @@ include_once("../res/comhead.php");
 		<table width="0" border="0" cellspacing="10" cellpadding="0" class="table">
 		<tr>
 			<th>姓名</th>
-			<th>教室</th>
+			<th>場地</th>
 			<th>日期</th>
 			<th>課堂</th>
 			<th>審核</th>

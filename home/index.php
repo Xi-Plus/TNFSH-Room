@@ -11,7 +11,7 @@ include_once("../func/data.php");
 <?php
 include_once("../res/comhead.php");
 ?>
-<title>最近借用-臺南一中教室借用管理系統</title>
+<title>最近預約-臺南一中場地預約管理系統</title>
 </head>
 <body topmargin="0" leftmargin="0" bottommargin="0">
 <?php
@@ -19,11 +19,11 @@ include_once("../res/header.php");
 ?>
 <div class="row">
 	<div class="col-md-offset-3 col-md-6">
-		<h2>最近借用</h2>
+		<h2>最近預約</h2>
 		<table width="0" border="0" cellspacing="10" cellpadding="0" class="table">
 		<tr>
 			<th>姓名</th>
-			<th>教室</th>
+			<th>場地</th>
 			<th>日期</th>
 			<th>課堂</th>
 			<th>審核</th>
@@ -59,7 +59,7 @@ include_once("../res/header.php");
 		if($noborrow){
 		?>
 		<tr>
-			<td colspan="5" align="center">無任何借用</td>
+			<td colspan="5" align="center">無任何預約</td>
 		</tr>
 		<?php
 		}

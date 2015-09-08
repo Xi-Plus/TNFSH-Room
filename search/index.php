@@ -38,9 +38,9 @@ if(isset($_POST["borrowone"])){
 			if(checkroompermission($login["id"],$_POST["borrowid"]))$query->value[]=array("valid","1");
 			INSERT($query);
 			$row = getoneroom($_POST['borrowid']);
-			addmsgbox("success","已借用 ".$_POST["borrowdate"]." 第".$_POST["borrowclass"]."節 ".$row["name"]);
+			addmsgbox("success","已預約 ".$_POST["borrowdate"]." 第".$_POST["borrowclass"]."節 ".$row["name"]);
 		}else {
-			addmsgbox("warning","已有人借用");
+			addmsgbox("warning","已有人預約");
 		}
 	}
 }else if(isset($_POST["borrowadmin"])){
@@ -84,7 +84,7 @@ if(isset($_POST["borrowone"])){
 					);
 					DELETE($query);
 					$room=getoneroom($row["roomid"]);
-					addmsgbox("info","已刪除借用 ".$cate[$row["roomid"]]["name"]."-".$room["name"]." 日期 ".$row["date"]." 第".$row["class"]."節<br>");
+					addmsgbox("info","已刪除預約 ".$cate[$row["roomid"]]["name"]."-".$room["name"]." 日期 ".$row["date"]." 第".$row["class"]."節<br>");
 				}
 				$query=new query;
 				$query->table ="borrow";
@@ -100,7 +100,7 @@ if(isset($_POST["borrowone"])){
 				INSERT($query);
 			}
 			$row = getoneroom($_POST['borrowid']);
-			addmsgbox("success","已借用 ".date("Y-m-d",$starttime)." 至 ".date("Y-m-d",$endtime)." 星期".$_POST["borrowweek"]." 第".$_POST["borrowclass"]."節 ".$row["name"]);
+			addmsgbox("success","已預約 ".date("Y-m-d",$starttime)." 至 ".date("Y-m-d",$endtime)." 星期".$_POST["borrowweek"]." 第".$_POST["borrowclass"]."節 ".$row["name"]);
 		}else if($_POST["borrowtype"]=="delete"){
 			for($i=$starttime;$i<=$endtime;$i+=86400*7){
 				$query=new query;
@@ -127,7 +127,7 @@ if(isset($_POST["borrowone"])){
 if(isset($_POST["delhash"])){
 	$borrow=getoneborrow($_POST["delhash"]);
 	if($borrow===null){
-		addmsgbox("warning","查無此借用");
+		addmsgbox("warning","查無此預約");
 	}else if(checkborrorpermission($_POST["delhash"],$login["id"])){
 		$query=new query;
 		$query->table = "borrow";
@@ -136,7 +136,7 @@ if(isset($_POST["delhash"])){
 		);
 		DELETE($query);
 		$room=getoneroom($borrow["roomid"]);
-		addmsgbox("info","已刪除借用 ".$cate[$room["cate"]]["name"]."-".$room["name"]." 日期 ".$borrow["date"]." 第".$borrow["class"]."節");
+		addmsgbox("info","已刪除預約 ".$cate[$room["cate"]]["name"]."-".$room["name"]." 日期 ".$borrow["date"]." 第".$borrow["class"]."節");
 	}else {
 		addmsgbox("danger","你沒有權限");
 	}
@@ -150,7 +150,7 @@ $roomid=@$_GET["roomid"];
 <?php
 include_once("../res/comhead.php");
 ?>
-<title>所有借用查詢-臺南一中教室借用管理系統</title>
+<title>所有預約查詢-臺南一中場地預約管理系統</title>
 </head>
 <body Marginwidth="-1" Marginheight="-1" Topmargin="0" Leftmargin="0">
 <?php
@@ -166,7 +166,7 @@ include_once("../res/header.php");
 				<span class="input-group-addon glyphicon glyphicon-calendar"></span>
 			</div>
 			<div class="input-group">
-				<span class="input-group-addon">教室</span>
+				<span class="input-group-addon">場地</span>
 				<select class="form-control" name="roomid" onchange="if(this.value!='')search.submit();">
 					<option value="" id="chooseone">請選取一個</option>
 				<?php
@@ -184,7 +184,7 @@ include_once("../res/header.php");
 	<?php
 	if($roomid&&checkroompermission($login["id"],$roomid)){
 	?>
-		<h2>管理員借用</h2>
+		<h2>管理員預約</h2>
 		<form method="post" id="borrowadminform">
 			<input name="borrowadmin" type="hidden">
 			<input name="borrowid" type="hidden" value="<?php echo $roomid; ?>">
@@ -218,9 +218,9 @@ include_once("../res/header.php");
 				<input class="form-control" name="borrowclass" type="number" min="1" max="8" required>
 				<span class="input-group-addon glyphicon glyphicon-time"></span>
 			</div>
-			<button name="input" type="submit" class="btn btn-success" onClick="if(!confirm('確認借用?'))return false;borrowtype.value='borrow';">
+			<button name="input" type="submit" class="btn btn-success" onClick="if(!confirm('確認預約?'))return false;borrowtype.value='borrow';">
 				<span class="glyphicon glyphicon-shopping-cart"></span>
-				借用 
+				預約 
 			</button>
 			<button name="input" type="submit" class="btn btn-danger" onClick="if(!confirm('確認刪除?'))return false;borrowtype.value='delete';">
 				<span class="glyphicon glyphicon-trash"></span>
@@ -234,7 +234,7 @@ include_once("../res/header.php");
 	<div class="col-lg-8">
 		<?php
 		if($roomid==""){
-			?><h2>請先選取一間教室</h2><?php
+			?><h2>請先選取一個場地</h2><?php
 		}else {
 		?>
 			<div style="display:none">
@@ -258,14 +258,14 @@ include_once("../res/header.php");
 			<div class="table-responsive">
 			<script>
 				function checkborrow(id,date,cla){
-					if(!confirm('確認借用?'))return false;
+					if(!confirm('確認預約?'))return false;
 					borrowid.value=id;
 					borrowdate.value=date;
 					borrowclass.value=cla;
 					borrow.submit();
 				}
 				function checkdelborrow(id,other){
-					if(!confirm('確認取消?'+(other?'\n注意!這是其他人的借用':'')))return false;
+					if(!confirm('確認取消?'+(other?'\n注意!這是其他人的預約':'')))return false;
 					delhash.value=id;
 					delborrow.submit();
 					return false;
@@ -324,9 +324,9 @@ include_once("../res/header.php");
 					}else {
 						if($login!=false&&$firstdate+86400*$d>=time()-86400){
 						?>
-							<button name="input" type="button" class="btn btn-success" value="借用" onClick="checkborrow('<?php echo $roomid; ?>','<?php echo date("Y-m-d",$firstdate+86400*$d); ?>','<?php echo $c; ?>');">
+							<button name="input" type="button" class="btn btn-success" value="預約" onClick="checkborrow('<?php echo $roomid; ?>','<?php echo date("Y-m-d",$firstdate+86400*$d); ?>','<?php echo $c; ?>');">
 								<span class="glyphicon glyphicon-shopping-cart"></span>
-								借用 
+								預約 
 							</button>
 						<?php
 						}

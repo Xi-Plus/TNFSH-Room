@@ -6,7 +6,7 @@
 <link rel="SHORTCUT ICON" href="http://www.tnfsh.tn.edu.tw/ezfiles/0/1000/sys_1000_5899370_87126.ico" type="image/x-icon">
 <meta property="og:title" content="TNFSH-CBMS"/>
 <meta property="og:type" content="website"/>
-<meta property="og:description" content="臺南第一高級中學教室借用管理系統"/>
+<meta property="og:description" content="臺南第一高級中學場地預約管理系統"/>
 <meta property="og:url" content="http://<?php echo url()?>"/>
 <meta property="og:image" content="http://www.tnfsh.tn.edu.tw/ezfiles/0/1000/sys_1000_5899370_87126.ico">
 <style type="text/css">
