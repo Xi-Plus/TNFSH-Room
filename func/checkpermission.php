@@ -42,7 +42,7 @@ function checkroompermission($uid,$roomid=0){
 	if($row===null)return false;
 	return true;
 }
-function checkborrorpermission($hash,$uid){
+function checkborrowpermission($hash,$uid){
 	$query=new query;
 	$query->table = "borrow";
 	$query->column = array("*");

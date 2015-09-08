@@ -128,7 +128,7 @@ if(isset($_POST["delhash"])){
 	$borrow=getoneborrow($_POST["delhash"]);
 	if($borrow===null){
 		addmsgbox("warning","查無此預約");
-	}else if(checkborrorpermission($_POST["delhash"],$login["id"])){
+	}else if(checkborrowpermission($_POST["delhash"],$login["id"])){
 		$query=new query;
 		$query->table = "borrow";
 		$query->where = array(
@@ -306,7 +306,7 @@ include_once("../res/header.php");
 				?>
 					<td align="center"><?php
 					if(isset($borrow[date("Y-m-d",$firstdate+86400*$d)][$c])){
-						if(checkborrorpermission($borrow[date("Y-m-d",$firstdate+86400*$d)][$c]["hash"],$login["id"])&&date("Y-m-d",$firstdate+86400*$d)>=date("Y-m-d")){
+						if(checkborrowpermission($borrow[date("Y-m-d",$firstdate+86400*$d)][$c]["hash"],$login["id"])&&date("Y-m-d",$firstdate+86400*$d)>=date("Y-m-d")){
 						?>
 							<button name="input" type="button" class="btn btn-danger" onClick="checkdelborrow('<?php echo $borrow[date("Y-m-d",$firstdate+86400*$d)][$c]["hash"]; ?>',<?php echo ($borrow[date("Y-m-d",$firstdate+86400*$d)][$c]["userid"]==$login["id"]?"false":"true"); ?>);">
 								<span class="glyphicon glyphicon-trash"></span>

@@ -86,7 +86,7 @@ if(isset($_POST["delhash"])){
 	$borrow=getoneborrow($_POST["delhash"]);
 	if($borrow===null){
 		addmsgbox("warning","查無此預約");
-	}else if(checkborrorpermission($_POST["delhash"],$login["id"])){
+	}else if(checkborrowpermission($_POST["delhash"],$login["id"])){
 		$query=new query;
 		$query->table = "borrow";
 		$query->where = array(
