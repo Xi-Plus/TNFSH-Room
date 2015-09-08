@@ -186,7 +186,7 @@ if($data["power"]>=2){
 			}
 			editpowerchange(editpower.value);
 			</script>
-			<button name="input" type="submit" class="btn btn-success" onClick="if(!confirm('確認刪除?'))return false;">
+			<button name="input" type="submit" class="btn btn-success" onClick="if(!confirm('確認修改權限?'))return false;">
 				<span class="glyphicon glyphicon-pencil"></span>
 				修改 
 			</button>

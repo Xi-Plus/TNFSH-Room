@@ -65,7 +65,7 @@ include_once("../res/comhead.php");
 		<script>
 			function checkvaildborrow(id,istrue){
 				if(istrue){
-					if(!confirm('確認拒絕?'))return false;
+					if(!confirm('確認允許?'))return false;
 					valid.value='true';
 				}else {
 					if(!confirm('確認拒絕?'))return false;
