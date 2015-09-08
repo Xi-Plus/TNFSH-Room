@@ -12,7 +12,7 @@ if($login==false)header("Location: ../login/?from=user");
 else {
 $powername=array("封禁","使用者","管理員");
 $editid=@$login["id"];
-if(@is_numeric($_GET["id"]))$editid=$_GET["id"];
+if(@isset($_GET["id"]))$editid=$_GET["id"];
 $editdata = getoneacct($editid);
 $showdata=true;
 if(isset($_POST["sid"])&&$editid!=$_POST["sid"]){
