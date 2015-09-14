@@ -215,7 +215,7 @@ include_once("../res/header.php");
 			</div>
 			<div class="input-group">
 				<span class="input-group-addon">節數</span>
-				<input class="form-control" name="borrowclass" type="number" min="1" max="8" required>
+				<input class="form-control" name="borrowclass" type="number" min="1" max="9" required>
 				<span class="input-group-addon glyphicon glyphicon-time"></span>
 			</div>
 			<button name="input" type="submit" class="btn btn-success" onClick="if(!confirm('確認預約?'))return false;borrowtype.value='borrow';">
@@ -297,7 +297,7 @@ include_once("../res/header.php");
 			?>
 			</tr>
 			<?php
-			for($c=1;$c<=8;$c++){
+			for($c=1;$c<=9;$c++){
 			?>
 				<tr>
 				<td>第<?php echo $c; ?>節</td>
