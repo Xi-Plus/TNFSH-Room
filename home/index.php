@@ -76,7 +76,7 @@ include_once("../res/header.php");
 		if($noborrow){
 		?>
 		<tr>
-			<td colspan="5" align="center">無任何預約</td>
+			<td colspan="7" align="center">無任何預約</td>
 		</tr>
 		<?php
 		}
