@@ -19,7 +19,7 @@ include_once("../res/comhead.php");
 include_once("../res/header.php");
 ?>
 <div class="row">
-	<div class="col-md-offset-3 col-md-6">
+	<div class="col-md-offset-1 col-md-10">
 		<h2>最近預約</h2>
 		<table width="0" border="0" cellspacing="10" cellpadding="0" class="table">
 		<tr>
@@ -28,6 +28,8 @@ include_once("../res/header.php");
 			<th>日期</th>
 			<th>課堂</th>
 			<th>審核</th>
+			<th>訊息</th>
+			<th>管理</th>
 		</tr>
 		<?php
 		$room=getallroom();
@@ -57,13 +59,17 @@ include_once("../res/header.php");
 			<td><a href="../search/?roomid=<?php echo $borrow["roomid"]; ?>"><?php echo $cate[$room[$borrow["roomid"]]["cate"]]["name"]."-".$room[$borrow["roomid"]]["name"]; ?></a></td>
 			<td><?php echo $borrow["date"]; ?></td>
 			<td><?php echo $borrow["class"]; ?></td>
-			<?php if($borrow["valid"]){ ?>
-			<td>通過</td>
+			<?php if($borrow["valid"]==1){ ?>
+			<td>允許</td>
+			<?php }else if($borrow["valid"]==-1){ ?>
+			<td>拒絕</td>
 			<?php }else if($data["power"]>=2){ ?>
 			<td><a href="../validborrow">審核中</a></td>
 			<?php }else { ?>
 			<td>審核中</td>
 			<?php } ?>
+			<td><?php echo $borrow["message"]; ?></td>
+			<td><a href="../manageborrow/?hash=<?php echo $borrow["hash"] ?>">管理</a></td>
 		</tr>
 		<?php
 		}

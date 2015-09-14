@@ -50,7 +50,8 @@ function checkborrowpermission($hash,$uid){
 		array("hash",$hash)
 	);
 	$borrow=fetchone(SELECT($query));
-	if($uid==$borrow["userid"])return true;
+	if($borrow===false)return false;
+	else if($uid==$borrow["userid"])return true;
 	else if(checkroompermission($uid,$borrow["roomid"]))return true;
 	else return false;
 }

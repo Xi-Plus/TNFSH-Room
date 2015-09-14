@@ -82,23 +82,6 @@ if(isset($_POST["sid"])&&$editid!=$_POST["sid"]){
 	}
 }
 $cate=getallcate();
-if(isset($_POST["delhash"])){
-	$borrow=getoneborrow($_POST["delhash"]);
-	if($borrow===null){
-		addmsgbox("warning","查無此預約");
-	}else if(checkborrowpermission($_POST["delhash"],$login["id"])){
-		$query=new query;
-		$query->table = "borrow";
-		$query->where = array(
-			array("hash",$_POST["delhash"])
-		);
-		DELETE($query);
-		$room=getoneroom($borrow["roomid"]);
-		addmsgbox("info","已刪除預約 ".$cate[$room["cate"]]["name"]."-".$room["name"]." 日期 ".$borrow["date"]." 第".$borrow["class"]."節");
-	}else {
-		addmsgbox("danger","你沒有權限");
-	}
-}
 $room=getallroom();
 $editdata = getoneacct($editid);
 }
@@ -116,19 +99,7 @@ if($showdata){
 ?>
 <div class="row">
 	<div class="col-md-5">
-		<div style="display:none">
-			<form method="post" id="delborrow">
-				<input name="delhash" type="hidden" id="delhash">
-			</form>
-		</div>
 		<h2>目前預約</h2>
-		<script>
-			function checkdelborrow(id){
-				if(!confirm('確認取消?'))return false;
-				delhash.value=id;
-				delborrow.submit();
-			}
-		</script>
 		<table width="0" border="0" cellspacing="10" cellpadding="0" class="table">
 		<tr>
 			<th>分類</td>
@@ -163,10 +134,7 @@ if($showdata){
 			<td><?php echo $borrow["class"]; ?></td>
 			<td><?php echo ($borrow["valid"]?"通過":"審核中"); ?></td>
 			<td>
-			<button name="input" type="button" class="btn btn-danger" onClick="checkdelborrow('<?php echo $borrow["hash"]; ?>');">
-				<span class="glyphicon glyphicon-trash"></span>
-				取消 
-			</button>
+			<a href="../manageborrow/?hash=<?php echo $borrow["hash"] ?>">管理</a>
 			</td>
 		</tr>
 		<?php
