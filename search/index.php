@@ -291,7 +291,7 @@ include_once("../res/header.php");
 			$week=["日","一","二","三","四","五","六"];
 			for($d=0;$d<7;$d++){
 			?>
-				<th><?php echo date("m/d",$firstdate+86400*$d)."(".$week[$d].")"?></th>
+				<th style="text-align: center;"><?php echo date("m/d",$firstdate+86400*$d)."(".$week[$d].")"?></th>
 			<?php
 			}
 			?>

@@ -185,7 +185,7 @@ if($data["power"]>=2){
 						catedel.submit();
 					}
 				</script>
-				<table border="1" cellspacing="0" cellpadding="2" class="table table-hover table-condensed">
+				<table cellspacing="0" cellpadding="2" class="table table-hover table-condensed">
 				<div style="display:none">
 					<form method="post" id="catedel">
 						<input name="catedelid" type="hidden" id="catedelid">
@@ -345,7 +345,7 @@ if($data["power"]>=2){
 						roomdel.submit();
 					}
 				</script>
-				<table border="1" cellspacing="0" cellpadding="2" class="table table-hover table-condensed">
+				<table cellspacing="0" cellpadding="2" class="table table-hover table-condensed">
 				<tr>
 					<th>分類</th>
 					<th>名稱</th>

@@ -208,7 +208,7 @@ if($data["power"]>=2){
 				acctdel.submit();
 			}
 		</script>
-		<table border="1" cellspacing="0" cellpadding="2" class="table table-hover table-condensed">
+		<table cellspacing="0" cellpadding="2" class="table table-hover table-condensed">
 		<tr>
 			<th>帳號</th>
 			<th>姓名</th>
