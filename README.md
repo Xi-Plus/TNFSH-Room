@@ -1,5 +1,5 @@
 # TNFSH-Room
-場地借用系統
+臺南一中場地預約管理系統
 
 ## 安裝
 1. 重命名 `db_exmaple.php` 為 `db.php` 並修改
