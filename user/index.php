@@ -79,6 +79,34 @@ if(isset($_POST["sid"])&&$editid!=$_POST["sid"]){
 				addmsgbox("success","已更新郵件");
 			}
 		}
+		if(isset($_POST['power']) && $_POST['power']!=$editdata["power"]){
+			if ($login["id"]==$editdata["id"]) {
+				addmsgbox("danger","無法更改自己的權限");
+			}else if ($editdata["power"]>$login["power"]){
+				addmsgbox("danger","無法更改比自己權限高的帳戶");
+			} else if ($_POST["power"]>$login["power"]){
+				addmsgbox("danger","無法將權限調比自己高");
+			} else {
+				$query=new query;
+				$query->table = "account";
+				$query->value = array(
+					array("power",$_POST["power"])
+				);
+				$query->where = array(
+					array("id",$editdata["id"])
+				);
+				UPDATE($query);
+				addmsgbox("success","已將 ".$editdata["user"]."(".$editdata["name"].") 的權限更改為 ".$powername[$_POST["power"]]);
+				if($_POST["power"]<=0){
+					$query=new query;
+					$query->table = "session";
+					$query->where = array(
+						array("id",$editdata["id"])
+					);
+					DELETE($query);
+				}
+			}
+		}
 	}
 }
 $cate=getallcate();
@@ -293,6 +321,29 @@ if($showdata){
 				<input class="form-control" name="semail" type="email" id="semail" value="<?php echo $editdata["email"];?>" maxlength="64">
 				<span class="input-group-addon glyphicon glyphicon-envelope"></span>
 			</div>
+			<div class="input-group">
+				<span class="input-group-addon">權限</span>
+				<?php
+				if ($login["power"]<=1 || $login["id"]==$editdata["id"]) {
+				?>
+					<input class="form-control" type="text" title="你無法修改權限" disabled value="<?php echo $powername[$editdata["power"]]; ?>">
+				<?php
+				} else {
+				?>
+					<select class="form-control" name="power">
+					<?php
+						for($i=0;$i<=2;$i++){
+					?>
+						<option value="<?php echo $i; ?>" <?php echo ($editdata["power"]==$i?"selected":"")?>><?php echo $powername[$i]; ?></option>
+					<?php
+						}
+					?>
+					</select>
+				<?php
+				}
+				?>
+				<span class="input-group-addon glyphicon glyphicon-tower"></span>
+			</div>
 			<button name="input" type="submit" class="btn btn-success">
 				<span class="glyphicon glyphicon-pencil"></span>
 				更新資料 
@@ -300,8 +351,6 @@ if($showdata){
 		</form>
 		<br>
 		<ul class="list-group">
-			<li class="list-group-item list-group-item-info">全域權限</li>
-			<li class="list-group-item"><?php echo $powername[$editdata["power"]]; ?></li>
 			<li class="list-group-item list-group-item-info">場地管理權限</li>
 		<?php
 			if($editdata["power"]>=2){ ?><li class="list-group-item">全部</li><?php

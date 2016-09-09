@@ -14,36 +14,6 @@ if($data==false)header("Location: ../login/?from=manageuser");
 else if($data["power"]<=1){
 	addmsgbox("danger","你沒有權限");
 	?><script>setTimeout(function(){location="../home";},1000);</script><?php
-}else if(isset($_POST["editpower"])){
-	if($data["id"]==$_POST["editpower"]){
-		addmsgbox("warning","無法更改自己的權限");
-	}else{
-		$row = getoneacct($_POST['editpower']);
-		if($row["power"]>$data["power"]){
-			addmsgbox("warning","無法更改比自己權限高的帳戶");
-		}else if($_POST["power"]>$data["power"]){
-			addmsgbox("warning","無法將權限調比自己高");
-		}else {
-			$query=new query;
-			$query->table = "account";
-			$query->value = array(
-				array("power",$_POST["power"])
-			);
-			$query->where = array(
-				array("id",$_POST["editpower"])
-			);
-			UPDATE($query);
-			addmsgbox("success","已將 ".$row["user"]."(".$row["name"].") 的權限更改為 ".$powername[$_POST["power"]]);
-			if($_POST["power"]<=0){
-				$query=new query;
-				$query->table = "session";
-				$query->where = array(
-					array("id",$_POST["editpower"])
-				);
-				DELETE($query);
-			}
-		}
-	}
 }else if(isset($_POST['suser'])){
 	$row = getoneacct($_POST['suser']);
 	if($row!==null){
@@ -149,46 +119,6 @@ if($data["power"]>=2){
 			<button name="input" type="submit" class="btn btn-success">
 				<span class="glyphicon glyphicon-plus"></span>
 				新增 
-			</button>
-			</table>
-		</form>
-		<h2>修改權限</h2>
-		<form method="post">
-			<div class="input-group">
-				<span class="input-group-addon">帳號</span>
-				<select class="form-control" name="editpower" id="editpower" onChange="editpowerchange(this.value);">
-				<?php
-					foreach($acct as $i => $accttemp){
-				?>
-					<option value="<?php echo $i; ?>"><?php echo $accttemp["name"]; ?></option>
-				<?php
-					}
-				?>
-				</select>
-				<span class="input-group-addon glyphicon glyphicon-user"></span>
-			</div>
-			<div class="input-group">
-				<span class="input-group-addon">權限</span>
-				<select class="form-control" name="power" id="editpowerpower">
-				<?php
-					for($i=0;$i<=2;$i++){
-				?>
-					<option value="<?php echo $i; ?>" <?php echo ($accttemp["power"]==$i?"selected":"")?>><?php echo $powername[$i]; ?></option>
-				<?php
-					}
-				?>
-				</select>
-				<span class="input-group-addon glyphicon glyphicon-tower"></span>
-			</div>
-			<script>
-			function editpowerchange(id){
-				editpowerpower.selectedIndex=acct[id]["power"];
-			}
-			editpowerchange(editpower.value);
-			</script>
-			<button name="input" type="submit" class="btn btn-success" onClick="if(!confirm('確認修改權限?'))return false;">
-				<span class="glyphicon glyphicon-pencil"></span>
-				修改 
 			</button>
 			</table>
 		</form>
