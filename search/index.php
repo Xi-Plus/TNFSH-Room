@@ -2,6 +2,7 @@
 <html lang="zh-Hant-TW">
 <?php
 date_default_timezone_set("Asia/Taipei");
+include_once("../config/config.php");
 include_once("../func/sql.php");
 include_once("../func/common.php");
 include_once("../func/checkpermission.php");
@@ -12,8 +13,10 @@ $login=checklogin();
 $cate=getallcate();
 if(isset($_POST["borrowone"])){
 	if($login==false)header("Location: ../login/");
-	if($_POST["borrowdate"]<date("Y-m-d")){
-		addmsgbox("warning","日期必須是今天以後");
+	if(strtotime($_POST["borrowdate"])<strtotime(date("Y-m-d"))+86400*$cfg['borrow']['daylimit']['min']){
+		addmsgbox("warning","日期必須是7天以後");
+	}else if(strtotime($_POST["borrowdate"])>strtotime(date("Y-m-d"))+86400*$cfg['borrow']['daylimit']['max']){
+		addmsgbox("warning","日期必須是28天以內");
 	}else {
 		$query=new query;
 		$query->table ="borrow";
@@ -322,7 +325,7 @@ include_once("../res/header.php");
 						<?php
 						}
 					}else {
-						if($login!=false&&$firstdate+86400*$d>=time()-86400){
+						if($login!=false&&$firstdate+86400*$d>=time()-86400+86400*$cfg['borrow']['daylimit']['min']&&$firstdate+86400*$d<=time()-86400+86400*$cfg['borrow']['daylimit']['max']){
 						?>
 							<button name="input" type="button" class="btn btn-success" value="預約" onClick="checkborrow('<?php echo $roomid; ?>','<?php echo date("Y-m-d",$firstdate+86400*$d); ?>','<?php echo $c; ?>');">
 								<span class="glyphicon glyphicon-shopping-cart"></span>
