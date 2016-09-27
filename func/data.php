@@ -79,4 +79,16 @@ function getoneborrow($hash){
 	$query->limit = array(0,1);
 	return fetchone(SELECT($query));
 }
+
+function periodname(){
+	$query=new query;
+	$query->table = "periodname";
+	$query->order = array("no");
+	$row=SELECT($query);
+	$res=array();
+	foreach ($row as $temp) {
+		$res[$temp["no"]]=$temp["name"];
+	}
+	return $res;
+}
 ?>

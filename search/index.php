@@ -10,6 +10,7 @@ include_once("../func/consolelog.php");
 include_once("../func/data.php");
 include_once("../func/msgbox.php");
 $login=checklogin();
+$period=periodname();
 $cate=getallcate();
 if(isset($_POST["borrowone"])){
 	if($login==false)header("Location: ../login/");
@@ -41,7 +42,7 @@ if(isset($_POST["borrowone"])){
 			if(checkroompermission($login["id"],$_POST["borrowid"]))$query->value[]=array("valid","1");
 			INSERT($query);
 			$row = getoneroom($_POST['borrowid']);
-			addmsgbox("success","已預約 ".$_POST["borrowdate"]." 第".$_POST["borrowclass"]."節 ".$row["name"]);
+			addmsgbox("success","已預約 ".$_POST["borrowdate"]." ".$period[$_POST["borrowclass"]]." ".$row["name"]);
 		}else {
 			addmsgbox("warning","已有人預約");
 		}
@@ -87,7 +88,7 @@ if(isset($_POST["borrowone"])){
 					);
 					DELETE($query);
 					$room=getoneroom($row["roomid"]);
-					addmsgbox("info","已刪除預約 ".$cate[$row["roomid"]]["name"]."-".$room["name"]." 日期 ".$row["date"]." 第".$row["class"]."節<br>");
+					addmsgbox("info","已刪除預約 ".$cate[$row["roomid"]]["name"]."-".$room["name"]." 日期 ".$row["date"]." ".$period[$row["class"]]."<br>");
 				}
 				$query=new query;
 				$query->table ="borrow";
@@ -103,7 +104,7 @@ if(isset($_POST["borrowone"])){
 				INSERT($query);
 			}
 			$row = getoneroom($_POST['borrowid']);
-			addmsgbox("success","已預約 ".date("Y-m-d",$starttime)." 至 ".date("Y-m-d",$endtime)." 星期".$_POST["borrowweek"]." 第".$_POST["borrowclass"]."節 ".$row["name"]);
+			addmsgbox("success","已預約 ".date("Y-m-d",$starttime)." 至 ".date("Y-m-d",$endtime)." 星期".$_POST["borrowweek"]." ".$period[$_POST["borrowclass"]]." ".$row["name"]);
 		}else if($_POST["borrowtype"]=="delete"){
 			for($i=$starttime;$i<=$endtime;$i+=86400*7){
 				$query=new query;
@@ -123,7 +124,7 @@ if(isset($_POST["borrowone"])){
 			);
 			$query->limit = array(0,1);
 			$row = fetchone(SELECT($query));
-			addmsgbox("info","已刪除 ".date("Y-m-d",$starttime)." 至 ".date("Y-m-d",$endtime)." 星期".$_POST["borrowweek"]." 第".$_POST["borrowclass"]."節 ".$row["name"]);
+			addmsgbox("info","已刪除 ".date("Y-m-d",$starttime)." 至 ".date("Y-m-d",$endtime)." 星期".$_POST["borrowweek"]." ".$period[$_POST["borrowclass"]]." ".$row["name"]);
 		}
 	}
 }
@@ -139,7 +140,7 @@ if(isset($_POST["delhash"])){
 		);
 		DELETE($query);
 		$room=getoneroom($borrow["roomid"]);
-		addmsgbox("info","已刪除預約 ".$cate[$room["cate"]]["name"]."-".$room["name"]." 日期 ".$borrow["date"]." 第".$borrow["class"]."節");
+		addmsgbox("info","已刪除預約 ".$cate[$room["cate"]]["name"]."-".$room["name"]." 日期 ".$borrow["date"]." ".$period[$borrow["class"]]);
 	}else {
 		addmsgbox("danger","你沒有權限");
 	}
@@ -212,13 +213,18 @@ include_once("../res/header.php");
 					<option value="4">四</option>
 					<option value="5">五</option>
 					<option value="6">六</option>
-				?>
 				</select>
 				<span class="input-group-addon glyphicon glyphicon-calendar"></span>
 			</div>
 			<div class="input-group">
 				<span class="input-group-addon">節數</span>
-				<input class="form-control" name="borrowclass" type="number" min="1" max="9" required>
+				<select class="form-control" name="borrowclass">
+					<?php
+					foreach ($period as $key => $value) {
+						echo '<option value="'.$key.'">'.$value.'</option>';
+					}
+					?>
+				</select>
 				<span class="input-group-addon glyphicon glyphicon-time"></span>
 			</div>
 			<button name="input" type="submit" class="btn btn-success" onClick="if(!confirm('確認預約?'))return false;borrowtype.value='borrow';">
@@ -300,10 +306,10 @@ include_once("../res/header.php");
 			?>
 			</tr>
 			<?php
-			for($c=1;$c<=9;$c++){
+			foreach ($period as $c => $pname) {
 			?>
 				<tr>
-				<td>第<?php echo $c; ?>節</td>
+				<td><?php echo $pname; ?></td>
 				<?php
 				for($d=0;$d<7;$d++){
 				?>

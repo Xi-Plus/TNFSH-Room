@@ -7,6 +7,7 @@ include_once("../func/sql.php");
 include_once("../func/common.php");
 include_once("../func/data.php");
 $data=checklogin();
+$period=periodname();
 ?>
 <head>
 <?php
@@ -26,7 +27,7 @@ include_once("../res/header.php");
 			<th>姓名</th>
 			<th>場地</th>
 			<th>日期</th>
-			<th>課堂</th>
+			<th>節次</th>
 			<th>審核</th>
 			<th>訊息</th>
 			<th>管理</th>
@@ -58,7 +59,7 @@ include_once("../res/header.php");
 			<?php } ?>
 			<td><a href="../search/?roomid=<?php echo $borrow["roomid"]; ?>"><?php echo $cate[$room[$borrow["roomid"]]["cate"]]["name"]."-".$room[$borrow["roomid"]]["name"]; ?></a></td>
 			<td><?php echo $borrow["date"]; ?></td>
-			<td><?php echo $borrow["class"]; ?></td>
+			<td><?php echo $period[$borrow["class"]]; ?></td>
 			<?php if($borrow["valid"]==1){ ?>
 			<td>允許</td>
 			<?php }else if($borrow["valid"]==-1){ ?>

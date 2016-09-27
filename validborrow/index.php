@@ -8,6 +8,7 @@ include_once("../func/common.php");
 include_once("../func/data.php");
 include_once("../func/msgbox.php");
 $login=checklogin();
+$period=periodname();
 if($login===false)header("Location: ../login/?from=validborrow");
 else if(!checkroompermission($login["id"])){
 	addmsgbox("danger","你沒有權限");
@@ -96,7 +97,7 @@ include_once("../res/comhead.php");
 				<td><?php echo $acct[$borrow["userid"]]["name"]; ?></td>
 				<td><?php echo $cate[$room[$borrow["roomid"]]["cate"]]["name"]."-".$room[$borrow["roomid"]]["name"]; ?></td>
 				<td><?php echo $borrow["date"]; ?></td>
-				<td><?php echo $borrow["class"]; ?></td>
+				<td><?php echo $period[$borrow["class"]]; ?></td>
 				<td>
 				<input type="checkbox" name="borrow[]" value="<?php echo $borrow["hash"]; ?>">
 				<!--

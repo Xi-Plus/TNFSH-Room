@@ -8,6 +8,7 @@ include_once("../func/common.php");
 include_once("../func/data.php");
 include_once("../func/msgbox.php");
 $login=checklogin();
+$period=periodname();
 if($login==false)header("Location: ../login/?from=user");
 else {
 $powername=array("封禁","使用者","管理員");
@@ -133,7 +134,7 @@ if($showdata){
 			<th>分類</td>
 			<th>場地</td>
 			<th>日期</td>
-			<th>課堂</td>
+			<th>節次</td>
 			<th>審核</td>
 			<th>管理</td>
 		</tr>
@@ -159,7 +160,7 @@ if($showdata){
 			<td><?php echo $cate[$room[$borrow["roomid"]]["cate"]]["name"]; ?></td>
 			<td><?php echo $room[$borrow["roomid"]]["name"]; ?></td>
 			<td><?php echo $borrow["date"]; ?></td>
-			<td><?php echo $borrow["class"]; ?></td>
+			<td><?php echo $period[$borrow["class"]]; ?></td>
 			<td><?php echo ($borrow["valid"]?"通過":"審核中"); ?></td>
 			<td>
 			<a href="../manageborrow/?hash=<?php echo $borrow["hash"] ?>">管理</a>
@@ -242,7 +243,7 @@ if($showdata){
 					<th>分類</th>
 					<th>場地</th>
 					<th>日期</th>
-					<th>課堂</th>
+					<th>節次</th>
 				</tr>
 				<?php
 					}
@@ -252,7 +253,7 @@ if($showdata){
 					<td><?php echo $cate[$room[$borrow["roomid"]]["cate"]]["name"]; ?></td>
 					<td><?php echo $room[$borrow["roomid"]]["name"]; ?></td>
 					<td><?php echo $borrow["date"]; ?></td>
-					<td><?php echo $borrow["class"]; ?></td>
+					<td><?php echo $period[$borrow["class"]]; ?></td>
 				</tr>
 				<?php
 					if($i==$count-1||$i%10==9){
@@ -269,7 +270,7 @@ if($showdata){
 				<th>分類</th>
 				<th>場地</th>
 				<th>日期</th>
-				<th>課堂</th>
+				<th>節次</th>
 			</tr>
 			<tr>
 				<td colspan="4" align="center">無任何預約</td>
