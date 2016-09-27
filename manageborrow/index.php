@@ -8,6 +8,7 @@ include_once("../func/common.php");
 include_once("../func/data.php");
 include_once("../func/msgbox.php");
 $login=checklogin();
+$period=periodname();
 $showdata=true;
 if(isset($_POST["hash"])){
 	$query=new query;
@@ -43,7 +44,7 @@ if(isset($_POST["hash"])){
 			DELETE($query);
 			$room=getoneroom($borrow["roomid"]);
 			$cate=getonecate($room["cate"]);
-			addmsgbox("info","已刪除預約 ".$cate["name"]."-".$room["name"]." 日期 ".$borrow["date"]." 第".$borrow["class"]."節");
+			addmsgbox("info","已刪除預約 ".$cate["name"]."-".$room["name"]." 日期 ".$borrow["date"]." ".$period[$borrow["class"]]);
 		}else addmsgbox("danger","你沒有權限");
 	}
 }
@@ -99,8 +100,8 @@ if($showdata){
 				<span class="input-group-addon glyphicon glyphicon-calendar"></span>
 			</div>
 			<div class="input-group">
-				<span class="input-group-addon">節數</span>
-				<input class="form-control" type="text" disabled value="<?php echo $borrow["class"]; ?>">
+				<span class="input-group-addon">節次</span>
+				<input class="form-control" type="text" disabled value="<?php echo $period[$borrow["class"]]; ?>">
 				<span class="input-group-addon glyphicon glyphicon-time"></span>
 			</div>
 			<div class="input-group">
