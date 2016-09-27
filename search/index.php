@@ -282,7 +282,17 @@ include_once("../res/header.php");
 			</script>
 			<table cellspacing="0" cellpadding="5" style="font-size:20px" class="table table-hover table-condensed">
 			<tr>
-			<th></th>
+			<th>
+				<a href="?date=<?php echo date("Y-m-d", strtotime($date)-86400*7);?>&roomid=<?php echo $roomid; ?>" class="btn btn-default btn-xs" role="button">
+					＜
+				</a>
+				<a href="?date=<?php echo date("Y-m-d");?>&roomid=<?php echo $roomid; ?>" class="btn btn-default btn-xs" role="button">
+					●
+				</a>
+				<a href="?date=<?php echo date("Y-m-d", strtotime($date)+86400*7);?>&roomid=<?php echo $roomid; ?>" class="btn btn-default btn-xs" role="button">
+					＞
+				</a>
+			</th>
 			<?php
 			$query=new query;
 			$query->table = "borrow";
