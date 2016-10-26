@@ -41,7 +41,9 @@ CREATE TABLE `roomlist` (
   `id` char(32) NOT NULL,
   `name` char(32) NOT NULL,
   `cate` char(32) NOT NULL,
-  `admin` char(32) NOT NULL DEFAULT ''
+  `admin` char(32) NOT NULL DEFAULT '',
+  `borrow_daylimit_min` int(11) NOT NULL DEFAULT '7',
+  `borrow_daylimit_max` int(11) NOT NULL DEFAULT '28'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `session` (

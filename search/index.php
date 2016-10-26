@@ -14,10 +14,11 @@ $period=periodname();
 $cate=getallcate();
 if(isset($_POST["borrowone"])){
 	if($login==false)header("Location: ../login/");
-	if(strtotime($_POST["borrowdate"])<strtotime(date("Y-m-d"))+86400*$cfg['borrow']['daylimit']['min']){
-		addmsgbox("warning","日期必須是7天以後");
-	}else if(strtotime($_POST["borrowdate"])>strtotime(date("Y-m-d"))+86400*$cfg['borrow']['daylimit']['max']){
-		addmsgbox("warning","日期必須是28天以內");
+	$room = getoneroom($_POST['borrowid']);
+	if(strtotime($_POST["borrowdate"])<strtotime(date("Y-m-d"))+86400*$room['borrow_daylimit_min']){
+		addmsgbox("warning","日期必須是 ".$room['borrow_daylimit_min']." 天以後");
+	}else if(strtotime($_POST["borrowdate"])>strtotime(date("Y-m-d"))+86400*$room['borrow_daylimit_max']){
+		addmsgbox("warning","日期必須是 ".$room['borrow_daylimit_max']." 天以前");
 	}else {
 		$query=new query;
 		$query->table ="borrow";
@@ -27,8 +28,8 @@ if(isset($_POST["borrowone"])){
 			array("date",$_POST["borrowdate"]),
 			array("class",$_POST["borrowclass"])
 		);
-		$row=fetchone(SELECT($query));
-		if($row===null){
+		$borrow=fetchone(SELECT($query));
+		if($borrow===null){
 			$query=new query;
 			$query->table ="borrow";
 			$query->value = array(
@@ -41,8 +42,7 @@ if(isset($_POST["borrowone"])){
 			);
 			if(checkroompermission($login["id"],$_POST["borrowid"]))$query->value[]=array("valid","1");
 			INSERT($query);
-			$row = getoneroom($_POST['borrowid']);
-			addmsgbox("success","已預約 ".$_POST["borrowdate"]." ".$period[$_POST["borrowclass"]]." ".$row["name"]);
+			addmsgbox("success","已預約 ".$_POST["borrowdate"]." ".$period[$_POST["borrowclass"]]." ".$room["name"]);
 		}else {
 			addmsgbox("warning","已有人預約");
 		}
@@ -126,6 +126,23 @@ if(isset($_POST["borrowone"])){
 			$row = fetchone(SELECT($query));
 			addmsgbox("info","已刪除 ".date("Y-m-d",$starttime)." 至 ".date("Y-m-d",$endtime)." 星期".$_POST["borrowweek"]." ".$period[$_POST["borrowclass"]]." ".$row["name"]);
 		}
+	}
+}else if(isset($_POST["setting"])){
+	if($login==false)header("Location: ../login/");
+	else if(!checkroompermission($login["id"],$_POST["borrowid"])){
+		addmsgbox("danger","你沒有權限");
+	}else {
+		$query=new query;
+		$query->table ="roomlist";
+		$query->value = array(
+			array("borrow_daylimit_min",$_POST["borrow_daylimit_min"]),
+			array("borrow_daylimit_max",$_POST["borrow_daylimit_max"])
+		);
+		$query->where = array(
+			array("id",$_POST["roomid"])
+		);
+		UPDATE($query);
+		addmsgbox("success","已更新借用期限為 ".$_POST["borrow_daylimit_min"]." 天至 ".$_POST["borrow_daylimit_max"]." 天");
 	}
 }
 if(isset($_POST["delhash"])){
@@ -236,6 +253,25 @@ include_once("../res/header.php");
 				刪除 
 			</button>
 		</form>
+		<h2>場地設定</h2>
+		<form method="post" id="borrowadminform">
+			<input name="setting" type="hidden">
+			<input name="roomid" type="hidden" value="<?php echo $roomid; ?>">
+			<div class="input-group">
+				<span class="input-group-addon">借用最小期限</span>
+				<input class="form-control" name="borrow_daylimit_min" type="number" min="0" value="<?php echo $room[$roomid]['borrow_daylimit_min']; ?>" required>
+				<span class="input-group-addon glyphicon glyphicon-calendar"></span>
+			</div>
+			<div class="input-group">
+				<span class="input-group-addon">借用最大期限</span>
+				<input class="form-control" name="borrow_daylimit_max" type="number" min="0" value="<?php echo $room[$roomid]['borrow_daylimit_max']; ?>" required>
+				<span class="input-group-addon glyphicon glyphicon-calendar"></span>
+			</div>
+			<button type="submit" class="btn btn-success">
+				<span class="glyphicon glyphicon-shopping-cart"></span>
+				修改 
+			</button>
+		</form>
 	<?php
 	}
 	?>
@@ -341,7 +377,7 @@ include_once("../res/header.php");
 						<?php
 						}
 					}else {
-						if($login!=false&&$firstdate+86400*$d>=time()-86400+86400*$cfg['borrow']['daylimit']['min']&&$firstdate+86400*$d<=time()-86400+86400*$cfg['borrow']['daylimit']['max']){
+						if($login!=false&&$firstdate+86400*$d>=time()-86400+86400*$room[$roomid]["borrow_daylimit_min"]&&$firstdate+86400*$d<=time()-86400+86400*$room[$roomid]["borrow_daylimit_max"]){
 						?>
 							<button name="input" type="button" class="btn btn-success" value="預約" onClick="checkborrow('<?php echo $roomid; ?>','<?php echo date("Y-m-d",$firstdate+86400*$d); ?>','<?php echo $c; ?>');">
 								<span class="glyphicon glyphicon-shopping-cart"></span>
