@@ -77,7 +77,7 @@ $acct=getallacct();
 <?php
 include_once("../res/comhead.php");
 ?>
-<title>使用者管理-臺南一中場地預約管理系統</title>
+<title>使用者管理-<?php echo $cfg['site']['name']; ?></title>
 </head>
 <body Marginwidth="-1" Marginheight="-1" Topmargin="0" Leftmargin="0">
 <script>

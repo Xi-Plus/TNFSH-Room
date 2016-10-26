@@ -18,7 +18,7 @@ setcookie("TNFSH_Classroom", "", time(), "/");
 <?php
 include_once("../res/comhead.php");
 ?>
-<title>登出-臺南一中場地預約管理系統</title>
+<title>登出-<?php echo $cfg['site']['name']; ?></title>
 </head>
 <body Marginwidth="-1" Marginheight="-1" Topmargin="0" Leftmargin="0">
 <?php

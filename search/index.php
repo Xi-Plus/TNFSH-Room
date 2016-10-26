@@ -171,7 +171,7 @@ $roomid=@$_GET["roomid"];
 <?php
 include_once("../res/comhead.php");
 ?>
-<title>所有預約查詢-臺南一中場地預約管理系統</title>
+<title>所有預約查詢-<?php echo $cfg['site']['name']; ?></title>
 </head>
 <body Marginwidth="-1" Marginheight="-1" Topmargin="0" Leftmargin="0">
 <?php
