@@ -50,8 +50,8 @@ $login=checklogin();
 						);
 						$row = SELECT($query);
 						$isborrow=false;
-						foreach ($row as $borrow) {
-							if(!checkroompermission(@$login["id"],$borrow["roomid"]))continue;
+						foreach ($row as $temp) {
+							if(!checkroompermission(@$login["id"],$temp["roomid"]))continue;
 							$isborrow=true;
 							break;
 						}
