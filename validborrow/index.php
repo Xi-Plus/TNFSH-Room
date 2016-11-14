@@ -45,7 +45,7 @@ if(isset($_POST['valid'])){
 				array("hash",$hash)
 			);
 			UPDATE($query);
-			$message.="<br>".$cate[$room[$row["roomid"]]["cate"]]["name"]."-".$room[$row["roomid"]]["name"]." ".$row["date"]." 第".$row["class"]."節";
+			$message.="<br>".$cate[$room[$row["roomid"]]["cate"]]["name"]."-".$room[$row["roomid"]]["name"]." ".$row["date"]." ".$period[$row["class"]];
 		}
 		$message.="<br>訊息：".$_POST["message"];
 		addmsgbox($megboxtype,$message,true);
