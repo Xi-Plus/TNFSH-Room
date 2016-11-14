@@ -178,7 +178,7 @@ include_once("../res/comhead.php");
 include_once("../res/header.php");
 ?>
 <div class="row">
-	<div class="col-lg-4">
+	<div class="col-lg-3">
 		<h2>搜尋條件</h2>
 		<form method="get" id="search">
 			<div class="input-group">
@@ -269,14 +269,14 @@ include_once("../res/header.php");
 			</div>
 			<button type="submit" class="btn btn-success">
 				<span class="glyphicon glyphicon-shopping-cart"></span>
-				修改 
+				修改
 			</button>
 		</form>
 	<?php
 	}
 	?>
 	</div>
-	<div class="col-lg-8">
+	<div class="col-lg-9">
 		<?php
 		if($roomid==""){
 			?><h2>請先選取一個場地</h2><?php
@@ -299,6 +299,19 @@ include_once("../res/header.php");
 			$enddate=strtotime($date)-(date("w",strtotime($date))-6)*86400;
 			?>
 			目前顯示：<?php echo date("Y-m-d",$firstdate); ?>&nbsp;至&nbsp;<?php echo date("Y-m-d",$enddate); ?>&nbsp;<?php echo $cate[$room[$roomid]["cate"]]["name"]." ".$room[$roomid]["name"]; ?>
+			<br>
+			<strong>圖例</strong>
+			<button type="button" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-ok"><span class="glyphicon glyphicon-remove"><span class="glyphicon glyphicon-question-sign"></button>你的預約/借用
+			<button type="button" class="btn btn-success btn-xs">
+				<span class="glyphicon glyphicon-shopping-cart"></span>
+			</button>可預約
+			<button type="button" class="btn btn-info btn-xs">
+				<span class="glyphicon glyphicon-shopping-cart"></span> 3
+			</button>3人預約
+			<span class="glyphicon glyphicon-user"></span>
+			有人借用
+			<span class="glyphicon glyphicon-warning-sign" style="color: red;"></span>
+			多人重複借用或預約，請聯絡場地管理員處理
 			
 			<div class="table-responsive">
 			<script>
@@ -314,6 +327,10 @@ include_once("../res/header.php");
 					delhash.value=id;
 					delborrow.submit();
 					return false;
+				}
+				function showinfo(id){
+					if (id.style.display == "none") id.style.display="";
+					else id.style.display="none";
 				}
 			</script>
 			<table cellspacing="0" cellpadding="5" style="font-size:20px" class="table table-hover table-condensed">
@@ -338,10 +355,15 @@ include_once("../res/header.php");
 				array("date",date("Y-m-d",$firstdate),">="),
 				array("date",date("Y-m-d",$enddate),"<=")
 			);
+			$query->order = array(
+				array("requesttime")
+			);
 			$row = SELECT($query);
 			unset($borrow);
 			foreach ($row as $temp) {
-				$borrow[$temp["date"]][$temp["class"]]=$temp;
+				@$borrow[$temp["date"]][$temp["class"]]["status"][$temp["valid"]]++;
+				if($login["id"]==$temp["userid"])@$borrow[$temp["date"]][$temp["class"]]["status"]["your"]=$temp["valid"];
+				@$borrow[$temp["date"]][$temp["class"]]["list"][]=$temp;
 			}
 			$week=["日","一","二","三","四","五","六"];
 			for($d=0;$d<7;$d++){
@@ -352,7 +374,47 @@ include_once("../res/header.php");
 			?>
 			</tr>
 			<?php
-			foreach ($period as $c => $pname) {
+			function getcolor($all, $your) {
+				if ($your!==null) {
+					return "primary";
+				} else {
+					if (@$all[1] > 0) {
+						return "default";
+					} else if (@$all[0]>0) {
+						return "info";
+					} else {
+						return "success";
+					}
+				}
+			}
+			function geticon($all) {
+				if (@$all[1]>0) {
+					return "user";
+				} else {
+					return "shopping-cart";
+				}
+			}
+			function getnumber($all, $your){
+				if (@$all[0] == 0) {
+					if (@$all[1] <= 1) {
+						return "";
+					} else {
+						return $all[1];
+					}
+				} else {
+					return @$all[1]+@$all[0];
+				}
+			}
+			function checkerror($all){
+				if (@$all[1] > 1) {
+					return true;
+				} else if (@$all[1] == 1 && @$all[0] > 0) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+			foreach ($period as $pid => $pname) {
 			?>
 				<tr>
 				<td><?php echo $pname; ?></td>
@@ -361,35 +423,48 @@ include_once("../res/header.php");
 					$borrowdate=date("Y-m-d",$firstdate+86400*$d);
 				?>
 					<td <?php echo ($borrowdate == $date?'class="info"':''); ?> align="center"><?php
-					if(isset($borrow[date("Y-m-d",$firstdate+86400*$d)][$c])){
-						if(checkborrowpermission($borrow[date("Y-m-d",$firstdate+86400*$d)][$c]["hash"],$login["id"])&&date("Y-m-d",$firstdate+86400*$d)>=date("Y-m-d")){
+					if(@count($borrow[$borrowdate][$pid]["list"])){
 						?>
-							<button name="input" type="button" class="btn btn-danger" onClick="checkdelborrow('<?php echo $borrow[date("Y-m-d",$firstdate+86400*$d)][$c]["hash"]; ?>',<?php echo ($borrow[date("Y-m-d",$firstdate+86400*$d)][$c]["userid"]==$login["id"]?"false":"true"); ?>);">
-								<span class="glyphicon glyphicon-trash"></span>
-								<?php echo $acct[$borrow[date("Y-m-d",$firstdate+86400*$d)][$c]["userid"]]["name"]; ?> 
+							<button name="input" type="button" class="btn btn-<?php echo getcolor(@$borrow[$borrowdate][$pid]["status"], @$borrow[$borrowdate][$pid]["status"]["your"]); ?>" onclick="showinfo(info_<?php echo $pid; ?>_<?php echo $d; ?>)">
+								<span class="glyphicon glyphicon-<?php echo geticon(@$borrow[$borrowdate][$pid]["status"]); ?>"></span> 
+								<?php echo getnumber(@$borrow[$borrowdate][$pid]["status"], @$borrow[$borrowdate][$pid]["status"]["your"]);
+								if (@$borrow[$borrowdate][$pid]["status"]["your"]!==null) {
+									?> <span class="glyphicon glyphicon-<?php 
+									switch ($borrow[$borrowdate][$pid]["status"]["your"]) {
+										case 1:
+											echo "ok";
+											break;
+										case 0:
+											echo "question-sign";
+											break;
+										case -1:
+											echo "remove";
+											break;
+									} 
+									?>"></span><?php
+								}
+								if (checkerror(@$borrow[$borrowdate][$pid]["status"])) {
+									?> <span class="glyphicon glyphicon-warning-sign" style="color: red;"></span><?php
+								}
+								?>
 							</button>
+							<div id="info_<?php echo $pid; ?>_<?php echo $d; ?>" style="display: none;">
+							<?php
+							foreach ($borrow[$borrowdate][$pid]["list"] as $singleborrow) {
+								?><a href="../manageborrow/?hash=<?php echo $singleborrow["hash"]; ?>"><?php echo $acct[$singleborrow["userid"]]["name"]; ?></a><br><?php
+							}
+							?>
+							</div>
 						<?php
-						}else {
-						?>
-							<button name="input" type="button" class="btn btn-default" disabled>
-								<span class="glyphicon glyphicon-user"></span>
-								<?php echo $acct[$borrow[date("Y-m-d",$firstdate+86400*$d)][$c]["userid"]]["name"]; ?> 
-							</button>
-						<?php
-						}
 					}else {
-						if($login!=false&&$firstdate+86400*$d>=time()-86400+86400*$room[$roomid]["borrow_daylimit_min"]&&$firstdate+86400*$d<=time()-86400+86400*$room[$roomid]["borrow_daylimit_max"]){
+						if($firstdate+86400*$d>=time()-86400+86400*$room[$roomid]["borrow_daylimit_min"]&&$firstdate+86400*$d<=time()-86400+86400*$room[$roomid]["borrow_daylimit_max"]){
 						?>
-							<button name="input" type="button" class="btn btn-success" value="預約" onClick="checkborrow('<?php echo $roomid; ?>','<?php echo date("Y-m-d",$firstdate+86400*$d); ?>','<?php echo $c; ?>');">
+							<button name="input" type="button" class="btn btn-success" value="預約" onClick="checkborrow('<?php echo $roomid; ?>','<?php echo $borrowdate; ?>','<?php echo $pid; ?>');">
 								<span class="glyphicon glyphicon-shopping-cart"></span>
-								預約 
 							</button>
 						<?php
 						}
 					}
-					?>
-					</td>
-					<?php
 				}
 				?>
 				</tr>
