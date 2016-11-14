@@ -129,7 +129,7 @@ if(isset($_POST["borrowone"])){
 	}
 }else if(isset($_POST["setting"])){
 	if($login==false)header("Location: ../login/");
-	else if(!checkroompermission($login["id"],$_POST["borrowid"])){
+	else if(!checkroompermission($login["id"],$_POST["roomid"])){
 		addmsgbox("danger","你沒有權限");
 	}else {
 		$query=new query;
