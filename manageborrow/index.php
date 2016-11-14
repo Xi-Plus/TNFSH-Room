@@ -127,7 +127,7 @@ if($showdata){
 			</button>
 			<?php
 			}
-			if($login!==false){
+			if(checkborrowpermission($_GET["hash"],$login["id"])){
 			?>
 			<button name="type" value="delete" type="submit" class="btn btn-danger" onClick="if(!confirm('確認取消?'))return false;">
 				<span class="glyphicon glyphicon-trash"></span>
