@@ -63,7 +63,7 @@ include_once("../res/comhead.php");
 	include_once("../res/header.php");
 	if(checkroompermission($login["id"])){
 ?>
-	<div class="col-md-offset-3 col-md-6">
+	<div class="col-md-offset-2 col-md-8">
 		<form method="post">
 			<h2>預約審核</h2>
 			<table width="0" border="0" cellspacing="10" cellpadding="0" class="table">
@@ -72,7 +72,8 @@ include_once("../res/comhead.php");
 				<th>場地</th>
 				<th>日期</th>
 				<th>課堂</th>
-				<th>審核</th>
+				<th>勾選</th>
+				<th>資訊</th>
 			</tr>
 			<?php
 			$query=new query;
@@ -94,39 +95,29 @@ include_once("../res/comhead.php");
 				$noborrow=false;
 			?>
 			<tr>
-				<td><?php echo $acct[$borrow["userid"]]["name"]; ?></td>
-				<td><?php echo $cate[$room[$borrow["roomid"]]["cate"]]["name"]."-".$room[$borrow["roomid"]]["name"]; ?></td>
-				<td><?php echo $borrow["date"]; ?></td>
+				<td><a href="../user/?id=<?php echo $borrow["userid"] ?>"><?php echo $acct[$borrow["userid"]]["name"]; ?></a></td>
+				<td><a href="../search/?roomid=<?php echo $borrow["roomid"]; ?>"><?php echo $cate[$room[$borrow["roomid"]]["cate"]]["name"]." ".$room[$borrow["roomid"]]["name"]; ?></a></td>
+				<td><a href="../search/?date=<?php echo $borrow["date"]; ?>&roomid=<?php echo $borrow["roomid"]; ?>"><?php echo $borrow["date"]; ?></a></td>
 				<td><?php echo $period[$borrow["class"]]; ?></td>
-				<td>
-				<input type="checkbox" name="borrow[]" value="<?php echo $borrow["hash"]; ?>">
-				<!--
-				<button name="input" type="button" class="btn btn-success" onClick="checkvaildborrow('<?php echo $borrow["hash"]; ?>',true);" >
-					<span class="glyphicon glyphicon-ok"></span>
-					允許
-				</button>
-				<button name="input" type="button" class="btn btn-danger" onClick="checkvaildborrow('<?php echo $borrow["hash"]; ?>',false);" >
-					<span class="glyphicon glyphicon-remove"></span>
-					拒絕
-				</button>
-				-->
+				<td><input type="checkbox" name="borrow[]" value="<?php echo $borrow["hash"]; ?>"></td>
+				<td><a href="../manageborrow/?hash=<?php echo $borrow["hash"] ?>">資訊</a></td>
 			</tr>
 			<?php
 			}
 			if($noborrow){
 			?>
 			<tr>
-				<td colspan="5" align="center">無任何審核</td>
+				<td colspan="6" align="center">無任何審核</td>
 			</tr>
 			<?php
 			}else {
 			?>
 			<tr>
-				<td colspan="5" align="center">
+				<td colspan="6" align="center">
 					<div class="input-group">
 						<span class="input-group-addon">訊息</span>
 						<input class="form-control" name="message" type="text" size="80">
-						<span class="input-group-addon glyphicon glyphicon-info-sign"></span>
+						<span class="input-group-addon glyphicon glyphicon-comment"></span>
 					</div>
 					<button name="valid" type="submit" class="btn btn-success" value="true">
 						<span class="glyphicon glyphicon-ok"></span>
