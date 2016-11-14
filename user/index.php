@@ -8,7 +8,7 @@ include_once("../func/common.php");
 include_once("../func/data.php");
 include_once("../func/msgbox.php");
 $login=checklogin();
-$period=periodname();
+$period=periodname(true);
 if($login==false)header("Location: ../login/?from=user");
 else {
 $powername=array("封禁","使用者","管理員");
@@ -136,7 +136,7 @@ if($showdata){
 			<th>日期</td>
 			<th>節次</td>
 			<th>審核</td>
-			<th>管理</td>
+			<th>資訊</td>
 		</tr>
 		<?php
 		$query=new query;
@@ -161,9 +161,20 @@ if($showdata){
 			<td><?php echo $room[$borrow["roomid"]]["name"]; ?></td>
 			<td><?php echo $borrow["date"]; ?></td>
 			<td><?php echo $period[$borrow["class"]]; ?></td>
-			<td><?php echo ($borrow["valid"]?"通過":"審核中"); ?></td>
+			<?php if($borrow["valid"]==1){ ?>
+			<td><span class="glyphicon glyphicon-ok" title="允許"></td>
+			<?php }else if($borrow["valid"]==-1){ ?>
+			<td><span class="glyphicon glyphicon-remove" title="拒絕"></td>
+			<?php }else { ?>
+			<td><span class="glyphicon glyphicon-question-sign" title="審核中"></td>
+			<?php } ?>
 			<td>
-			<a href="../manageborrow/?hash=<?php echo $borrow["hash"] ?>">管理</a>
+				<a href="../manageborrow/?hash=<?php echo $borrow["hash"] ?>">資訊</a>
+				<?php
+				if ($borrow["message"] != "") {
+					?><span class="glyphicon glyphicon-comment" title="有訊息"><?php
+				}
+				?>
 			</td>
 		</tr>
 		<?php
