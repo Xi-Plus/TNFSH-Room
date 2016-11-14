@@ -80,14 +80,15 @@ function getoneborrow($hash){
 	return fetchone(SELECT($query));
 }
 
-function periodname(){
+function periodname($short = false){
 	$query=new query;
 	$query->table = "periodname";
 	$query->order = array("no");
 	$row=SELECT($query);
 	$res=array();
 	foreach ($row as $temp) {
-		$res[$temp["no"]]=$temp["name"];
+		if ($short) $res[$temp["no"]]=$temp["shortname"];
+		else $res[$temp["no"]]=$temp["name"];
 	}
 	return $res;
 }

@@ -7,7 +7,7 @@ include_once("../func/sql.php");
 include_once("../func/common.php");
 include_once("../func/data.php");
 $data=checklogin();
-$period=periodname();
+$period=periodname(true);
 ?>
 <head>
 <?php
@@ -24,13 +24,12 @@ include_once("../res/header.php");
 		<h2>最近預約</h2>
 		<table width="0" border="0" cellspacing="10" cellpadding="0" class="table">
 		<tr>
-			<th>姓名</th>
+			<th>借用</th>
 			<th>場地</th>
 			<th>日期</th>
 			<th>節次</th>
 			<th>審核</th>
-			<th>訊息</th>
-			<th>管理</th>
+			<th>資訊</th>
 		</tr>
 		<?php
 		$room=getallroom();
@@ -57,20 +56,24 @@ include_once("../res/header.php");
 			<?php }else { ?>
 			<td><?php echo $acct[$borrow["userid"]]["name"]; ?></td>
 			<?php } ?>
-			<td><a href="../search/?roomid=<?php echo $borrow["roomid"]; ?>"><?php echo $cate[$room[$borrow["roomid"]]["cate"]]["name"]."-".$room[$borrow["roomid"]]["name"]; ?></a></td>
+			<td><a href="../search/?roomid=<?php echo $borrow["roomid"]; ?>"><?php echo $cate[$room[$borrow["roomid"]]["cate"]]["name"]." ".$room[$borrow["roomid"]]["name"]; ?></a></td>
 			<td><?php echo $borrow["date"]; ?></td>
 			<td><?php echo $period[$borrow["class"]]; ?></td>
 			<?php if($borrow["valid"]==1){ ?>
-			<td>允許</td>
+			<td><span class="glyphicon glyphicon-ok" title="允許"></td>
 			<?php }else if($borrow["valid"]==-1){ ?>
-			<td>拒絕</td>
-			<?php }else if($data["power"]>=2){ ?>
-			<td><a href="../validborrow">審核中</a></td>
+			<td><span class="glyphicon glyphicon-remove" title="拒絕"></td>
 			<?php }else { ?>
-			<td>審核中</td>
+			<td><span class="glyphicon glyphicon-question-sign" title="審核中"></td>
 			<?php } ?>
-			<td><?php echo $borrow["message"]; ?></td>
-			<td><a href="../manageborrow/?hash=<?php echo $borrow["hash"] ?>">管理</a></td>
+			<td>
+				<a href="../manageborrow/?hash=<?php echo $borrow["hash"] ?>">資訊</a>
+				<?php
+				if ($borrow["message"] != "") {
+					?><span class="glyphicon glyphicon-comment" title="有訊息"><?php
+				}
+				?>
+			</td>
 		</tr>
 		<?php
 		}
