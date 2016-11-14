@@ -346,7 +346,7 @@ include_once("../res/header.php");
 			$week=["日","一","二","三","四","五","六"];
 			for($d=0;$d<7;$d++){
 			?>
-				<th style="text-align: center;"><?php echo date("m/d",$firstdate+86400*$d)."(".$week[$d].")"?></th>
+				<th <?php echo (date("Y-m-d", $firstdate+86400*$d) == $date?'class="info"':''); ?> style="text-align: center;"><?php echo date("d",$firstdate+86400*$d)."<br>(".$week[$d].")"?></th>
 			<?php
 			}
 			?>
@@ -358,8 +358,9 @@ include_once("../res/header.php");
 				<td><?php echo $pname; ?></td>
 				<?php
 				for($d=0;$d<7;$d++){
+					$borrowdate=date("Y-m-d",$firstdate+86400*$d);
 				?>
-					<td align="center"><?php
+					<td <?php echo ($borrowdate == $date?'class="info"':''); ?> align="center"><?php
 					if(isset($borrow[date("Y-m-d",$firstdate+86400*$d)][$c])){
 						if(checkborrowpermission($borrow[date("Y-m-d",$firstdate+86400*$d)][$c]["hash"],$login["id"])&&date("Y-m-d",$firstdate+86400*$d)>=date("Y-m-d")){
 						?>
@@ -386,6 +387,9 @@ include_once("../res/header.php");
 						<?php
 						}
 					}
+					?>
+					</td>
+					<?php
 				}
 				?>
 				</tr>
