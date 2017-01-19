@@ -2,14 +2,15 @@
 <html lang="zh-Hant-TW">
 <?php
 date_default_timezone_set("Asia/Taipei");
+include_once("../config/config.php");
 include_once("../func/checkpermission.php");
 include_once("../func/sql.php");
 include_once("../func/common.php");
 include_once("../func/msgbox.php");
 function loginsuccess($row){
-	global $noshow;
+	global $noshow, $cfg;
 	$cookie=getrandommd5();
-	setcookie("TNFSH_Classroom", $cookie, time()+86400*7, "/");
+	setcookie($cfg['cookie']['login']['name'], $cookie, time()+$cfg['cookie']['login']['expire'], $cfg['cookie']['login']['path']);
 	$query=new query;
 	$query->table = "session";
 	$query->value = array(

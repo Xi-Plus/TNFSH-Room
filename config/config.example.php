@@ -8,4 +8,7 @@ $cfg['og']['description'] = '臺南一中場地預約管理系統';
 $cfg['img']['icon'] = '../res/image/icon.ico';
 $cfg['img']['header'] = '../res/image/header.png';
 $cfg['img']['og:image'] = '../res/image/header.png';
+$cfg['cookie']['login']['name'] = 'TNFSH_Classroom';
+$cfg['cookie']['login']['expire'] = 86400*7;
+$cfg['cookie']['login']['path'] = '/room/';
 ?>
