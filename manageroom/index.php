@@ -17,14 +17,25 @@ else if($data["power"]<=1){
 	?><script>setTimeout(function(){locateion="../home";},1000);</script><?php
 }
 else if(isset($_POST["catedelid"])){
-	$row=getonecate($_POST['catedelid']);
+	$name=getonecate($_POST['catedelid'])["name"];
 	$query=new query;
-	$query->table = "category";
+	$query->table = "roomlist";
+	$query->column = array("*");
 	$query->where = array(
-		array("id",$_POST["catedelid"])
+		array("cate", $_POST["catedelid"])
 	);
-	DELETE($query);
-	addmsgbox("info","已刪除分類 名稱為 ".$row["name"]);
+	$row = SELECT($query);
+	if ($row) {
+		addmsgbox("danger","尚有場地屬於此分類，無法刪除分類 ".$name);
+	} else {
+		$query=new query;
+		$query->table = "category";
+		$query->where = array(
+			array("id",$_POST["catedelid"])
+		);
+		DELETE($query);
+		addmsgbox("info","已刪除分類 名稱為 ".$name);
+	}
 }
 else if(isset($_POST["addcate"])){
 	if($_POST["name"]=="")addmsgbox("warning","名稱為空");
