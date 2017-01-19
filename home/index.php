@@ -26,8 +26,8 @@ include_once("../res/header.php");
 		<tr>
 			<th>借用</th>
 			<th>場地</th>
-			<th>日期</th>
-			<th>節次</th>
+			<th>月/日-節次</th>
+			<th>更新</th>
 			<th>審核</th>
 			<th>資訊</th>
 		</tr>
@@ -39,12 +39,12 @@ include_once("../res/header.php");
 		$query->table = "borrow";
 		$query->column = array("*");
 		$query->where = array(
-			array("date",date("Y-m-d"),">=")
+			array("date",date("Y-m-d"),">="),
+			array("updatetime",date("Y-m-d H:i:s", time()-86400*7),">=")
 		);
 		$query->order = array(
 			array("updatetime","DESC")
 		);
-		$query->limit = array(0,10);
 		$row = SELECT($query);
 		$noborrow=true;
 		foreach ($row as $borrow) {
@@ -56,9 +56,9 @@ include_once("../res/header.php");
 			<?php }else { ?>
 			<td><?php echo $acct[$borrow["userid"]]["name"]; ?></td>
 			<?php } ?>
-			<td><a href="../search/?roomid=<?php echo $borrow["roomid"]; ?>"><?php echo $cate[$room[$borrow["roomid"]]["cate"]]["name"]." ".$room[$borrow["roomid"]]["name"]; ?></a></td>
-			<td><?php echo $borrow["date"]; ?></td>
-			<td><?php echo $period[$borrow["class"]]; ?></td>
+			<td><a href="../search/?roomid=<?php echo $borrow["roomid"]; ?>"><?php echo $room[$borrow["roomid"]]["name"]; ?></a></td>
+			<td><?php echo date("m/d", strtotime($borrow["date"]))."-".$period[$borrow["class"]]; ?></td>
+			<td><?php echo timelen(time()-strtotime($borrow["updatetime"]))."前"; ?></td>
 			<?php if($borrow["valid"]==1){ ?>
 			<td><span class="glyphicon glyphicon-ok" title="允許"></td>
 			<?php }else if($borrow["valid"]==-1){ ?>
