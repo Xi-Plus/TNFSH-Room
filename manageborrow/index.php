@@ -105,6 +105,11 @@ if($showdata){
 				<span class="input-group-addon glyphicon glyphicon-time"></span>
 			</div>
 			<div class="input-group">
+				<span class="input-group-addon">更新</span>
+				<input class="form-control" type="text" disabled value="<?php echo $borrow["updatetime"]; ?>">
+				<span class="input-group-addon glyphicon glyphicon-time"></span>
+			</div>
+			<div class="input-group">
 				<span class="input-group-addon">審核</span>
 				<select class="form-control" name="valid" <?php echo (checkroompermission($login["id"],$borrow["roomid"])?"":"disabled"); ?>>
 					<option value="1" <?php echo ($borrow["valid"]=="1"?"selected":""); ?>>允許</option>
