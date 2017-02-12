@@ -280,6 +280,8 @@ include_once("../res/header.php");
 		<?php
 		if($roomid==""){
 			?><h2>請先選取一個場地</h2><?php
+		}else if(!isset($room[$roomid])){
+			?><h2>查無場地，請重新選取</h2><?php
 		}else {
 		?>
 			<div style="display:none">
