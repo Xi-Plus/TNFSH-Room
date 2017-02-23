@@ -22,6 +22,7 @@ CREATE TABLE `borrow` (
   `date` date NOT NULL,
   `class` int(11) NOT NULL,
   `valid` int(11) NOT NULL DEFAULT '0',
+  `requesttime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updatetime` datetime NOT NULL,
   `message` char(255) NOT NULL DEFAULT '',
   `hash` char(32) NOT NULL
@@ -34,8 +35,21 @@ CREATE TABLE `category` (
 
 CREATE TABLE `periodname` (
   `no` int(11) NOT NULL,
-  `name` varchar(10) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf32;
+  `name` varchar(10) NOT NULL,
+  `shortname` varchar(5) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `periodname` (`no`, `name`, `shortname`) VALUES
+(5, '早自修', '早'),
+(10, '第1節', '1'),
+(20, '第2節', '2'),
+(30, '第3節', '3'),
+(40, '第4節', '4'),
+(45, '午休', '午'),
+(50, '第5節', '5'),
+(60, '第6節', '6'),
+(70, '第7節', '7'),
+(80, '第8節', '8');
 
 CREATE TABLE `roomlist` (
   `id` char(32) NOT NULL,
@@ -48,7 +62,7 @@ CREATE TABLE `roomlist` (
 
 CREATE TABLE `session` (
   `id` char(32) NOT NULL,
-  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `cookie` char(32) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -56,8 +70,20 @@ CREATE TABLE `session` (
 ALTER TABLE `account`
   ADD UNIQUE KEY `user` (`user`);
 
+ALTER TABLE `borrow`
+  ADD UNIQUE KEY `hash` (`hash`);
+
+ALTER TABLE `category`
+  ADD UNIQUE KEY `id` (`id`);
+
 ALTER TABLE `periodname`
   ADD UNIQUE KEY `no` (`no`);
+
+ALTER TABLE `roomlist`
+  ADD UNIQUE KEY `id` (`id`);
+
+ALTER TABLE `session`
+  ADD UNIQUE KEY `cookie` (`cookie`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
