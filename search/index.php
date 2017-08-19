@@ -234,44 +234,27 @@ include_once("../res/header.php");
 				<span class="input-group-addon glyphicon glyphicon-calendar"></span>
 			</div>
 			<div class="input-group">
-				<span class="input-group-addon">節數</span>
+				<span class="input-group-addon">時間</span>
 				<select class="form-control" name="borrowclass">
 					<?php
-					foreach ($period as $key => $value) {
-						echo '<option value="'.$key.'">'.$value.'</option>';
+					foreach ($room[$roomid]['borrow_accept_period'] as $key) {
+						echo '<option value="'.$key.'">'.$period[$key].'</option>';
 					}
 					?>
 				</select>
 				<span class="input-group-addon glyphicon glyphicon-time"></span>
 			</div>
-			<button name="input" type="submit" class="btn btn-success" onClick="if(!confirm('確認預約?'))return false;borrowtype.value='borrow';">
+			<button name="input" type="submit" class="btn btn-success" onClick="if(!confirm('確認預約？'))return false;borrowtype.value='borrow';">
 				<span class="glyphicon glyphicon-shopping-cart"></span>
 				預約 
 			</button>
-			<button name="input" type="submit" class="btn btn-danger" onClick="if(!confirm('確認刪除?'))return false;borrowtype.value='delete';">
+			<button name="input" type="submit" class="btn btn-danger" onClick="if(!confirm('確認取消預約？'))return false;borrowtype.value='delete';">
 				<span class="glyphicon glyphicon-trash"></span>
-				刪除 
+				取消預約 
 			</button>
 		</form>
 		<h2>場地設定</h2>
-		<form method="post" id="borrowadminform">
-			<input name="setting" type="hidden">
-			<input name="roomid" type="hidden" value="<?php echo $roomid; ?>">
-			<div class="input-group">
-				<span class="input-group-addon">借用最小期限</span>
-				<input class="form-control" name="borrow_daylimit_min" type="number" min="0" value="<?php echo $room[$roomid]['borrow_daylimit_min']; ?>" required>
-				<span class="input-group-addon glyphicon glyphicon-calendar"></span>
-			</div>
-			<div class="input-group">
-				<span class="input-group-addon">借用最大期限</span>
-				<input class="form-control" name="borrow_daylimit_max" type="number" min="0" value="<?php echo $room[$roomid]['borrow_daylimit_max']; ?>" required>
-				<span class="input-group-addon glyphicon glyphicon-calendar"></span>
-			</div>
-			<button type="submit" class="btn btn-success">
-				<span class="glyphicon glyphicon-shopping-cart"></span>
-				修改 
-			</button>
-		</form>
+		<a href="../editroom/?roomid=<?=$roomid?>">前往場地設定</a>
 	<?php
 	}
 	?>
@@ -354,10 +337,10 @@ include_once("../res/header.php");
 			?>
 			</tr>
 			<?php
-			foreach ($period as $c => $pname) {
+			foreach ($room[$roomid]['borrow_accept_period'] as $c) {
 			?>
 				<tr>
-				<td><?php echo $pname; ?></td>
+				<td><?php echo $period[$c]; ?></td>
 				<?php
 				for($d=0;$d<7;$d++){
 					$borrowdate=date("Y-m-d",$firstdate+86400*$d);

@@ -41,15 +41,18 @@ CREATE TABLE `periodname` (
 
 INSERT INTO `periodname` (`no`, `name`, `shortname`) VALUES
 (5, '早自修', '早'),
+(9, '早上', '早'),
 (10, '第1節', '1'),
 (20, '第2節', '2'),
 (30, '第3節', '3'),
 (40, '第4節', '4'),
 (45, '午休', '午'),
+(49, '下午', '下'),
 (50, '第5節', '5'),
 (60, '第6節', '6'),
 (70, '第7節', '7'),
-(80, '第8節', '8');
+(80, '第8節', '8'),
+(89, '晚上', '晚');
 
 CREATE TABLE `roomlist` (
   `id` char(32) NOT NULL,
@@ -57,7 +60,8 @@ CREATE TABLE `roomlist` (
   `cate` char(32) NOT NULL,
   `admin` char(32) NOT NULL DEFAULT '',
   `borrow_daylimit_min` int(11) NOT NULL DEFAULT '7',
-  `borrow_daylimit_max` int(11) NOT NULL DEFAULT '28'
+  `borrow_daylimit_max` int(11) NOT NULL DEFAULT '28',
+  `borrow_accept_period` json DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `session` (

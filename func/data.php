@@ -51,7 +51,7 @@ function getallacct(){
 }
 
 function getoneroom($id){
-	return getone("roomlist",$id);
+	return getallroom()[$id] ?? null;
 }
 function getallroom(){
 	$query=new query;
@@ -65,6 +65,7 @@ function getallroom(){
 	$data=array();
 	foreach ($row as $temp){
 		$data[$temp["id"]]=$temp;
+		$data[$temp["id"]]['borrow_accept_period'] = json_decode($data[$temp["id"]]['borrow_accept_period'], true);
 	}
 	return $data;
 }

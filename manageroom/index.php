@@ -89,7 +89,8 @@ else if(isset($_POST["addroom"])){
 			array("id",$newid),
 			array("name",$_POST["name"]),
 			array("cate",$_POST["cate"]),
-			array("admin",$_POST["admin"])
+			array("admin",$_POST["admin"]),
+			array("borrow_accept_period","[]")
 		);
 		INSERT($query);
 		addmsgbox("success","已增加場地 名稱為 ".$_POST["name"]." 分類為 ".$cate[$_POST["cate"]]["name"]." 管理者為 ".($_POST["admin"]==""?"無":$acct[$_POST["admin"]]["name"]));
