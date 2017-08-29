@@ -304,7 +304,7 @@ var period = <?php echo json_encode($period); ?>
 				$enddate=mktime(23, 59, 59, date("n",strtotime($date)), date("t",strtotime($date)));
 			}	
 			?>
-			目前顯示：<?php echo date("Y-m-d",$firstdate); ?>&nbsp;至&nbsp;<?php echo date("Y-m-d",$enddate); ?>&nbsp;<?php echo $cate[$room[$roomid]["cate"]]["name"]." ".$room[$roomid]["name"]; ?>
+			目前顯示：<?php echo date("Y-m-d",$firstdate); ?>&nbsp;至&nbsp;<?php echo date("Y-m-d",$enddate); ?>&nbsp;<?php echo $cate[$room[$roomid]["cate"]]["name"]." ".$room[$roomid]["name"]; ?>（可借用距今<?=$room[$roomid]["borrow_daylimit_min"]?>～<?=$room[$roomid]["borrow_daylimit_max"]?>天）
 			
 			<div class="table-responsive">
 			<script>
