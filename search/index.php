@@ -127,23 +127,6 @@ if(isset($_POST["borrowone"])){
 			addmsgbox("info","已刪除 ".date("Y-m-d",$starttime)." 至 ".date("Y-m-d",$endtime)." 星期".$_POST["borrowweek"]." ".$period[$_POST["borrowclass"]]." ".$row["name"]);
 		}
 	}
-}else if(isset($_POST["setting"])){
-	if($login==false)header("Location: ../login/");
-	else if(!checkroompermission($login["id"],$_POST["roomid"])){
-		addmsgbox("danger","你沒有權限");
-	}else {
-		$query=new query;
-		$query->table ="roomlist";
-		$query->value = array(
-			array("borrow_daylimit_min",$_POST["borrow_daylimit_min"]),
-			array("borrow_daylimit_max",$_POST["borrow_daylimit_max"])
-		);
-		$query->where = array(
-			array("id",$_POST["roomid"])
-		);
-		UPDATE($query);
-		addmsgbox("success","已更新借用期限為 ".$_POST["borrow_daylimit_min"]." 天至 ".$_POST["borrow_daylimit_max"]." 天");
-	}
 }
 if(isset($_POST["delhash"])){
 	$borrow=getoneborrow($_POST["delhash"]);
