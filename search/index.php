@@ -150,9 +150,12 @@ $room=getallroom();
 $date=@(strtotime($_GET["date"])==false?date("Y-m-d"):$_GET["date"]);
 $class=@(is_numeric($_GET["class"])?$_GET["class"]:"1");
 $roomid=@$_GET["roomid"];
-$layout=@$_GET["layout"];
+if (!isset($_GET["layout"])) {
+	$_GET["layout"] = 0;
+}
+$layout = $_GET["layout"];
 if (!in_array($layout, ["1", "2"])) {
-	$layout = $room[$roomid]["default_layout"];
+	$layout = $room[$roomid]["default_layout"] ?? 1;
 }
 ?>
 <head>
