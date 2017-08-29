@@ -163,9 +163,14 @@ if(isset($_POST["delhash"])){
 	}
 }
 $acct=getallacct();
+$room=getallroom();
 $date=@(strtotime($_GET["date"])==false?date("Y-m-d"):$_GET["date"]);
 $class=@(is_numeric($_GET["class"])?$_GET["class"]:"1");
 $roomid=@$_GET["roomid"];
+$layout=@$_GET["layout"];
+if (!in_array($layout, ["1", "2"])) {
+	$layout = $room[$roomid]["default_layout"];
+}
 ?>
 <head>
 <?php
@@ -177,6 +182,9 @@ include_once("../res/comhead.php");
 <?php
 include_once("../res/header.php");
 ?>
+<script type="text/javascript">
+var period = <?php echo json_encode($period); ?>
+</script>
 <div class="row">
 	<div class="col-lg-4">
 		<h2>搜尋條件</h2>
@@ -191,7 +199,6 @@ include_once("../res/header.php");
 				<select class="form-control" name="roomid" onchange="if(this.value!='')search.submit();">
 					<option value="" id="chooseone">請選取一個</option>
 				<?php
-					$room=getallroom();
 					foreach ($room as $roomtemp) {
 				?>
 					<option value="<?php echo $roomtemp["id"]; ?>"<?php echo($roomtemp["id"]==$roomid?" selected":""); ?>><?php echo @$cate[$roomtemp["cate"]]["name"]." ".$roomtemp["name"]; ?></option>
@@ -200,6 +207,15 @@ include_once("../res/header.php");
 				?>
 				</select>
 				<span class="input-group-addon glyphicon glyphicon-home"></span>
+			</div>
+			<div class="input-group">
+				<span class="input-group-addon">顯示版面</span>
+				<select class="form-control" name="layout" onchange="if(this.value!='')search.submit();">
+					<option value="0"<?php echo($_GET["layout"]==0?" selected":"");?>>使用預設</option>
+					<option value="1"<?php echo($_GET["layout"]==1?" selected":"");?>>一律<?=$cfg['text']['layout'][1]?></option>
+					<option value="2"<?php echo($_GET["layout"]==2?" selected":"");?>>一律<?=$cfg['text']['layout'][2]?></option>
+				</select>
+				<span class="input-group-addon glyphicon glyphicon-time"></span>
 			</div>
 		</form>
 	<?php
@@ -280,22 +296,27 @@ include_once("../res/header.php");
 			</div>
 			<h2>搜尋結果</h2>
 			<?php
-			$firstdate=strtotime($date)-date("w",strtotime($date))*86400;
-			$enddate=strtotime($date)-(date("w",strtotime($date))-6)*86400;
+			if ($layout == 1) {
+				$firstdate=mktime(0, 0, 0, date("n",strtotime($date)), date("j",strtotime($date))-date("w",strtotime($date)));
+				$enddate=mktime(23, 59, 59, date("n",strtotime($date)), date("j",strtotime($date))-date("w",strtotime($date))+6);
+			} else if ($layout == 2) {
+				$firstdate=mktime(0, 0, 0, date("n",strtotime($date)), 1);
+				$enddate=mktime(23, 59, 59, date("n",strtotime($date)), date("t",strtotime($date)));
+			}	
 			?>
 			目前顯示：<?php echo date("Y-m-d",$firstdate); ?>&nbsp;至&nbsp;<?php echo date("Y-m-d",$enddate); ?>&nbsp;<?php echo $cate[$room[$roomid]["cate"]]["name"]." ".$room[$roomid]["name"]; ?>
 			
 			<div class="table-responsive">
 			<script>
 				function checkborrow(id,date,cla){
-					if(!confirm('確認預約?'))return false;
+					if(!confirm('確認預約 '+date+' '+period[cla]+'？'))return false;
 					borrowid.value=id;
 					borrowdate.value=date;
 					borrowclass.value=cla;
 					borrow.submit();
 				}
 				function checkdelborrow(id,other){
-					if(!confirm('確認取消?'+(other?'\n注意!這是其他人的預約':'')))return false;
+					if(!confirm('確認取消？'+(other?'\n注意！這是其他人的預約':'')))return false;
 					delhash.value=id;
 					delborrow.submit();
 					return false;
@@ -304,13 +325,25 @@ include_once("../res/header.php");
 			<table cellspacing="0" cellpadding="5" style="font-size:20px" class="table table-hover table-condensed">
 			<tr>
 			<th>
-				<a href="?date=<?php echo date("Y-m-d", strtotime($date)-86400*7);?>&roomid=<?php echo $roomid; ?>" class="btn btn-default btn-xs" role="button">
+				<a href="?date=<?php
+				if ($layout == 1) {
+					echo date("Y-m-d", strtotime($date)-86400*7);
+				} else if ($layout == 2) {
+					echo date("Y-m-d", strtotime($date.' -1 month'));
+				}
+				?>&roomid=<?=$roomid?>&layout=<?=$_GET["layout"]?>" class="btn btn-default btn-xs" role="button">
 					＜
 				</a>
-				<a href="?date=<?php echo date("Y-m-d");?>&roomid=<?php echo $roomid; ?>" class="btn btn-default btn-xs" role="button">
+				<a href="?date=<?php echo date("Y-m-d");?>&roomid=<?=$roomid?>&layout=<?=$_GET["layout"]?>" class="btn btn-default btn-xs" role="button">
 					●
 				</a>
-				<a href="?date=<?php echo date("Y-m-d", strtotime($date)+86400*7);?>&roomid=<?php echo $roomid; ?>" class="btn btn-default btn-xs" role="button">
+				<a href="?date=<?php
+				if ($layout == 1) {
+					echo date("Y-m-d", strtotime($date)+86400*7);
+				} else if ($layout == 2) {
+					echo date("Y-m-d", strtotime($date.' +1 month'));
+				}
+				?>&roomid=<?=$roomid?>&layout=<?=$_GET["layout"]?>" class="btn btn-default btn-xs" role="button">
 					＞
 				</a>
 			</th>
@@ -331,54 +364,80 @@ include_once("../res/header.php");
 			$week=["日","一","二","三","四","五","六"];
 			for($d=0;$d<7;$d++){
 			?>
-				<th <?php echo (date("Y-m-d", $firstdate+86400*$d) == $date?'class="info"':''); ?> style="text-align: center;"><?php echo date("d",$firstdate+86400*$d)."<br>(".$week[$d].")"?></th>
+				<th <?php
+				if ($layout == 1 && date("Y-m-d", $firstdate+86400*$d) == $date) {
+					echo 'class="info"'; 
+				}
+				?> style="text-align: center;"><?php
+					 echo "(".$week[$d].")";
+					 ?></th>
 			<?php
 			}
 			?>
 			</tr>
 			<?php
-			foreach ($room[$roomid]['borrow_accept_period'] as $c) {
-			?>
-				<tr>
-				<td><?php echo $period[$c]; ?></td>
-				<?php
-				for($d=0;$d<7;$d++){
-					$borrowdate=date("Y-m-d",$firstdate+86400*$d);
+			$now = $firstdate;
+			while (true) {
+				?><tr><th></th><?php
+				for ($i=0; $i < date("w", $now); $i++) { 
+					?><th></th><?php
+				}
+				for ($i=date("w", $now); $i < 7; $i++, $now+=86400) {
+					if ($now > $enddate) {
+						?><th></th><?php
+					} else {
+						?><th <?php echo (date("Y-m-d", $now) == $date?'class="info"':''); ?> style="text-align: center;"><?php echo date("d", $now); ?></th><?php
+					}
+				}
+				?></tr><?php
+				foreach ($room[$roomid]['borrow_accept_period'] as $c) {
 				?>
-					<td <?php echo ($borrowdate == $date?'class="info"':''); ?> align="center"><?php
-					if(isset($borrow[date("Y-m-d",$firstdate+86400*$d)][$c])){
-						if(checkborrowpermission($borrow[date("Y-m-d",$firstdate+86400*$d)][$c]["hash"],$login["id"])&&date("Y-m-d",$firstdate+86400*$d)>=date("Y-m-d")){
-						?>
-							<button name="input" type="button" class="btn btn-danger" onClick="checkdelborrow('<?php echo $borrow[date("Y-m-d",$firstdate+86400*$d)][$c]["hash"]; ?>',<?php echo ($borrow[date("Y-m-d",$firstdate+86400*$d)][$c]["userid"]==$login["id"]?"false":"true"); ?>);">
-								<span class="glyphicon glyphicon-trash"></span>
-								<?php echo $acct[$borrow[date("Y-m-d",$firstdate+86400*$d)][$c]["userid"]]["name"]; ?> 
-							</button>
-						<?php
+					<tr>
+					<td><?php echo $period[$c]; ?></td>
+					<?php
+					for($d=0;$d<7;$d++){
+						$borrowtime = $now-86400*7+86400*$d;
+						$borrowdate = date("Y-m-d", $borrowtime);
+					?>
+						<td <?php echo ($borrowdate == $date?'class="info"':''); ?> align="center"><?php
+						if ($layout == 2 && ($borrowtime < $firstdate || $borrowtime > $enddate)) {
+						} else if(isset($borrow[$borrowdate][$c])){
+							if(checkborrowpermission($borrow[$borrowdate][$c]["hash"],$login["id"])&&$borrowdate>=date("Y-m-d")){
+							?>
+								<button name="input" type="button" class="btn btn-danger" onClick="checkdelborrow('<?php echo $borrow[$borrowdate][$c]["hash"]; ?>',<?php echo ($borrow[$borrowdate][$c]["userid"]==$login["id"]?"false":"true"); ?>);">
+									<span class="glyphicon glyphicon-trash"></span>
+									<?php echo $acct[$borrow[$borrowdate][$c]["userid"]]["name"]; ?> 
+								</button>
+							<?php
+							}else {
+							?>
+								<button name="input" type="button" class="btn btn-default" disabled>
+									<span class="glyphicon glyphicon-user"></span>
+									<?php echo $acct[$borrow[$borrowdate][$c]["userid"]]["name"]; ?> 
+								</button>
+							<?php
+							}
 						}else {
-						?>
-							<button name="input" type="button" class="btn btn-default" disabled>
-								<span class="glyphicon glyphicon-user"></span>
-								<?php echo $acct[$borrow[date("Y-m-d",$firstdate+86400*$d)][$c]["userid"]]["name"]; ?> 
-							</button>
-						<?php
+							if($login!=false&&$borrowtime>=time()-86400+86400*$room[$roomid]["borrow_daylimit_min"]&&$borrowtime<=time()-86400+86400*$room[$roomid]["borrow_daylimit_max"]){
+							?>
+								<button name="input" type="button" class="btn btn-success" value="預約" onClick="checkborrow('<?php echo $roomid; ?>','<?php echo $borrowdate; ?>','<?php echo $c; ?>');">
+									<span class="glyphicon glyphicon-shopping-cart"></span>
+									預約 
+								</button>
+							<?php
+							}
 						}
-					}else {
-						if($login!=false&&$firstdate+86400*$d>=time()-86400+86400*$room[$roomid]["borrow_daylimit_min"]&&$firstdate+86400*$d<=time()-86400+86400*$room[$roomid]["borrow_daylimit_max"]){
 						?>
-							<button name="input" type="button" class="btn btn-success" value="預約" onClick="checkborrow('<?php echo $roomid; ?>','<?php echo date("Y-m-d",$firstdate+86400*$d); ?>','<?php echo $c; ?>');">
-								<span class="glyphicon glyphicon-shopping-cart"></span>
-								預約 
-							</button>
+						</td>
 						<?php
-						}
 					}
 					?>
-					</td>
-					<?php
+					</tr>
+				<?php
 				}
-				?>
-				</tr>
-			<?php
+				if ($now >= $enddate) {
+					break;
+				}
 			}
 			?>
 			</table>

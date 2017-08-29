@@ -11,4 +11,5 @@ $cfg['img']['og:image'] = '../res/image/header.png';
 $cfg['cookie']['login']['name'] = 'TNFSH_Classroom';
 $cfg['cookie']['login']['expire'] = 86400*7;
 $cfg['cookie']['login']['path'] = '/room/';
-?>
+
+$cfg['text']['layout'] = [1=>'週曆', 2=>'月曆'];

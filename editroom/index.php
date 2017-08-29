@@ -40,13 +40,15 @@ if (isset($_POST["edit"])) {
 	$query->value = array(
 		array("borrow_daylimit_min",$_POST["borrow_daylimit_min"]),
 		array("borrow_daylimit_max",$_POST["borrow_daylimit_max"]),
-		array("borrow_accept_period",json_encode($periodlist))
+		array("borrow_accept_period",json_encode($periodlist)),
+		array("default_layout",$_POST["default_layout"])
 	);
 	$query->where = array(
 		array("id",$roomid)
 	);
 	UPDATE($query);
-	addmsgbox("success","已更新借用期限為 ".$_POST["borrow_daylimit_min"]." 天至 ".$_POST["borrow_daylimit_max"]." 天，接受借用時間為".implode("、", $periodlistname));
+	addmsgbox("success","已更新借用期限為 ".$_POST["borrow_daylimit_min"]." 天至 ".$_POST["borrow_daylimit_max"]." 天，接受借用時間為".implode("、", $periodlistname).
+		"，預設顯示版面為 ".$cfg['text']['layout'][$_POST["default_layout"]]);
 }
 $room = getoneroom($roomid);
 ?>
@@ -86,6 +88,22 @@ if ($show) {
 						?><label class="checkbox-inline">
 							<input type="checkbox" name="borrow_accept_period[<?=$key?>]" <?php echo (in_array($key, $room["borrow_accept_period"])?"checked":"") ?>><?=$name?>
 						</label><?php
+					}
+					?>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<label class="col-sm-3 col-md-2 form-control-label"><i class="fa fa-tags filtericon" aria-hidden="true"></i> 預設顯示版面</label>
+			<div class="col-sm-9 col-md-10">
+				<div class="form-check form-check-inline">
+					<?php
+					for ($i=1; $i <= 2; $i++) { 
+					?>
+					<label class="form-check-label">
+						<input class="form-check-input" type="radio" name="default_layout" value="<?=$i?>" <?php echo ($room["default_layout"]==$i?"checked":"") ?>><?=$cfg['text']['layout'][$i]?>
+					</label>
+					<?php
 					}
 					?>
 				</div>
