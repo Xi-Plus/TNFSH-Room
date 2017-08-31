@@ -283,11 +283,11 @@ var period = <?php echo json_encode($period); ?>
 			<h2>搜尋結果</h2>
 			<?php
 			if ($layout == 1) {
-				$firstdate=mktime(0, 0, 0, date("n",strtotime($date)), date("j",strtotime($date))-date("w",strtotime($date)));
-				$enddate=mktime(23, 59, 59, date("n",strtotime($date)), date("j",strtotime($date))-date("w",strtotime($date))+6);
+				$firstdate=mktime(0, 0, 0, date("n",strtotime($date)), date("j",strtotime($date))-date("w",strtotime($date)), date("Y",strtotime($date)));
+				$enddate=mktime(23, 59, 59, date("n",strtotime($date)), date("j",strtotime($date))-date("w",strtotime($date))+6, date("Y",strtotime($date)));
 			} else if ($layout == 2) {
-				$firstdate=mktime(0, 0, 0, date("n",strtotime($date)), 1);
-				$enddate=mktime(23, 59, 59, date("n",strtotime($date)), date("t",strtotime($date)));
+				$firstdate=mktime(0, 0, 0, date("n",strtotime($date)), 1, date("Y",strtotime($date)));
+				$enddate=mktime(23, 59, 59, date("n",strtotime($date)), date("t",strtotime($date)), date("Y",strtotime($date)));
 			}	
 			?>
 			目前顯示：<?php echo date("Y-m-d",$firstdate); ?>&nbsp;至&nbsp;<?php echo date("Y-m-d",$enddate); ?>&nbsp;<?php echo $cate[$room[$roomid]["cate"]]["name"]." ".$room[$roomid]["name"]; ?>（可借用距今<?=$room[$roomid]["borrow_daylimit_min"]?>～<?=$room[$roomid]["borrow_daylimit_max"]?>天）
