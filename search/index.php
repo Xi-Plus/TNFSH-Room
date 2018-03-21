@@ -388,7 +388,9 @@ var period = <?php echo json_encode($period); ?>
 						<td <?php echo ($borrowdate == $date?'class="info"':''); ?> align="center"><?php
 						if ($layout == 2 && ($borrowtime < $firstdate || $borrowtime > $enddate)) {
 						} else if(isset($borrow[$borrowdate][$c])){
+							// 已被借用
 							if(checkborrowpermission($borrow[$borrowdate][$c]["hash"],$login["id"])&&$borrowdate>=date("Y-m-d")){
+								// 刪除借用
 							?>
 								<button name="input" type="button" class="btn btn-danger" onClick="checkdelborrow('<?php echo $borrow[$borrowdate][$c]["hash"]; ?>',<?php echo ($borrow[$borrowdate][$c]["userid"]==$login["id"]?"false":"true"); ?>);">
 									<span class="glyphicon glyphicon-trash"></span>
@@ -396,6 +398,7 @@ var period = <?php echo json_encode($period); ?>
 								</button>
 							<?php
 							}else {
+								// 不能刪除
 							?>
 								<button name="input" type="button" class="btn btn-default" disabled>
 									<span class="glyphicon glyphicon-user"></span>
@@ -404,7 +407,8 @@ var period = <?php echo json_encode($period); ?>
 							<?php
 							}
 						}else {
-							if($login!=false&&$borrowtime>=time()-86400+86400*$room[$roomid]["borrow_daylimit_min"]&&$borrowtime<=time()-86400+86400*$room[$roomid]["borrow_daylimit_max"]){
+							// 未被借用
+							if($login!=false&&(checkroompermission($login["id"],$roomid)||$borrowtime>=time()-86400+86400*$room[$roomid]["borrow_daylimit_min"]&&$borrowtime<=time()-86400+86400*$room[$roomid]["borrow_daylimit_max"])&&$borrowdate>=date("Y-m-d")){
 							?>
 								<button name="input" type="button" class="btn btn-success" value="預約" onClick="checkborrow('<?php echo $roomid; ?>','<?php echo $borrowdate; ?>','<?php echo $c; ?>');">
 									<span class="glyphicon glyphicon-shopping-cart"></span>
