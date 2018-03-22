@@ -56,7 +56,13 @@ include_once("../res/header.php");
 			<?php }else { ?>
 			<td><?php echo $acct[$borrow["userid"]]["name"]; ?></td>
 			<?php } ?>
-			<td><a href="../search/?roomid=<?php echo $borrow["roomid"]; ?>"><?php echo $room[$borrow["roomid"]]["name"]; ?></a></td>
+			<td><?php
+			if (isset($room[$borrow["roomid"]])) {
+				?><a href="../search/?roomid=<?php echo $borrow["roomid"]; ?>"><?php echo $room[$borrow["roomid"]]["name"]; ?></a><?php
+			} else {
+				echo "此場地已被刪除";
+			}
+			?></td>
 			<td><?php echo date("m/d", strtotime($borrow["date"]))."-".$period[$borrow["class"]]; ?></td>
 			<td><?php echo timelen(time()-strtotime($borrow["updatetime"]))."前"; ?></td>
 			<?php if($borrow["valid"]==1){ ?>

@@ -96,7 +96,13 @@ include_once("../res/comhead.php");
 			?>
 			<tr>
 				<td><a href="../user/?id=<?php echo $borrow["userid"] ?>"><?php echo $acct[$borrow["userid"]]["name"]; ?></a></td>
-				<td><a href="../search/?roomid=<?php echo $borrow["roomid"]; ?>"><?php echo $cate[$room[$borrow["roomid"]]["cate"]]["name"]." ".$room[$borrow["roomid"]]["name"]; ?></a></td>
+				<td><?php
+				if (isset($room[$borrow["roomid"]])) {
+					?><a href="../search/?roomid=<?php echo $borrow["roomid"]; ?>"><?php echo $cate[$room[$borrow["roomid"]]["cate"]]["name"]." ".$room[$borrow["roomid"]]["name"]; ?></a><?php
+				} else {
+					echo "此場地已被刪除";
+				}
+				?></td>
 				<td><a href="../search/?date=<?php echo $borrow["date"]; ?>&roomid=<?php echo $borrow["roomid"]; ?>"><?php echo $borrow["date"]; ?></a></td>
 				<td><?php echo $period[$borrow["class"]]; ?></td>
 				<td><input type="checkbox" name="borrow[]" value="<?php echo $borrow["hash"]; ?>"></td>

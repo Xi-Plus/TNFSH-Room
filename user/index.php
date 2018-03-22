@@ -157,8 +157,20 @@ if($showdata){
 			$noborrow=false;
 		?>
 		<tr>
-			<td><?php echo $cate[$room[$borrow["roomid"]]["cate"]]["name"]; ?></td>
-			<td><?php echo $room[$borrow["roomid"]]["name"]; ?></td>
+			<td><?php
+			if (isset($room[$borrow["roomid"]])) {
+				echo $cate[$room[$borrow["roomid"]]["cate"]]["name"];
+			} else {
+				echo "-";
+			}
+			?></td>
+			<td><?php
+			if (isset($room[$borrow["roomid"]])) {
+				echo $room[$borrow["roomid"]]["name"];
+			} else {
+				echo "此場地已被刪除";
+			}
+			?></td>
 			<td><?php echo $borrow["date"]; ?></td>
 			<td><?php echo $period[$borrow["class"]]; ?></td>
 			<?php if($borrow["valid"]==1){ ?>
@@ -261,8 +273,20 @@ if($showdata){
 					$noborrow=false;
 				?>
 				<tr>
-					<td><?php echo $cate[$room[$borrow["roomid"]]["cate"]]["name"]; ?></td>
-					<td><?php echo $room[$borrow["roomid"]]["name"]; ?></td>
+					<td><?php
+					if (isset($room[$borrow["roomid"]])) {
+						$cate[$room[$borrow["roomid"]]["cate"]]["name"];
+					} else {
+						echo "-";
+					}
+					?></td>
+					<td><?php
+					if (isset($room[$borrow["roomid"]])) {
+						echo $room[$borrow["roomid"]]["name"];
+					} else {
+						echo "此場地已被刪除";
+					}
+					?></td>
 					<td><?php echo $borrow["date"]; ?></td>
 					<td><?php echo $period[$borrow["class"]]; ?></td>
 				</tr>

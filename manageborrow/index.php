@@ -91,7 +91,13 @@ if($showdata){
 			</div>
 			<div class="input-group">
 				<span class="input-group-addon">場地</span>
-				<input class="form-control" type="text" disabled value="<?php echo $cate["name"]."-".$room["name"]; ?>">
+				<input class="form-control" type="text" disabled value="<?php
+				if ($room === null) {
+					echo "此場地已被刪除";
+				} else {
+					echo $cate["name"]."-".$room["name"];
+				}
+				?>">
 				<span class="input-group-addon glyphicon glyphicon-home"></span>
 			</div>
 			<div class="input-group">
