@@ -12,12 +12,15 @@ include_once("../func/msgbox.php");
 $login=checklogin();
 $period=periodname();
 $cate=getallcate();
+$date=@(strtotime($_GET["date"])==false?date("Y-m-d"):$_GET["date"]);
+$class=@(is_numeric($_GET["class"])?$_GET["class"]:"1");
+$roomid=@$_GET["roomid"];
 if(isset($_POST["borrowone"])){
 	if($login==false)header("Location: ../login/");
 	$room = getoneroom($_POST['borrowid']);
-	if(strtotime($_POST["borrowdate"])<strtotime(date("Y-m-d"))+86400*$room['borrow_daylimit_min']){
+	if(!checkroompermission($login["id"],$roomid)&&strtotime($_POST["borrowdate"])<strtotime(date("Y-m-d"))+86400*$room['borrow_daylimit_min']){
 		addmsgbox("warning","日期必須是 ".$room['borrow_daylimit_min']." 天以後");
-	}else if(strtotime($_POST["borrowdate"])>strtotime(date("Y-m-d"))+86400*$room['borrow_daylimit_max']){
+	}else if(!checkroompermission($login["id"],$roomid)&&strtotime($_POST["borrowdate"])>strtotime(date("Y-m-d"))+86400*$room['borrow_daylimit_max']){
 		addmsgbox("warning","日期必須是 ".$room['borrow_daylimit_max']." 天以前");
 	}else {
 		$query=new query;
@@ -147,9 +150,6 @@ if(isset($_POST["delhash"])){
 }
 $acct=getallacct();
 $room=getallroom();
-$date=@(strtotime($_GET["date"])==false?date("Y-m-d"):$_GET["date"]);
-$class=@(is_numeric($_GET["class"])?$_GET["class"]:"1");
-$roomid=@$_GET["roomid"];
 if (!isset($_GET["layout"])) {
 	$_GET["layout"] = 0;
 }
