@@ -394,7 +394,13 @@ var period = <?php echo json_encode($period); ?>
 							?>
 								<button name="input" type="button" class="btn btn-danger" onClick="checkdelborrow('<?php echo $borrow[$borrowdate][$c]["hash"]; ?>',<?php echo ($borrow[$borrowdate][$c]["userid"]==$login["id"]?"false":"true"); ?>);">
 									<span class="glyphicon glyphicon-trash"></span>
-									<?php echo $acct[$borrow[$borrowdate][$c]["userid"]]["name"]; ?> 
+									<?php
+									if (isset($acct[$borrow[$borrowdate][$c]["userid"]])) {
+										echo $acct[$borrow[$borrowdate][$c]["userid"]]["name"];
+									} else {
+										echo "已刪使用者";
+									}
+									?>
 								</button>
 							<?php
 							}else {
@@ -402,7 +408,13 @@ var period = <?php echo json_encode($period); ?>
 							?>
 								<button name="input" type="button" class="btn btn-default" disabled>
 									<span class="glyphicon glyphicon-user"></span>
-									<?php echo $acct[$borrow[$borrowdate][$c]["userid"]]["name"]; ?> 
+									<?php
+									if (isset($acct[$borrow[$borrowdate][$c]["userid"]])) {
+										echo $acct[$borrow[$borrowdate][$c]["userid"]]["name"];
+									} else {
+										echo "已刪使用者";
+									}
+									?>
 								</button>
 							<?php
 							}
