@@ -205,7 +205,7 @@ var period = <?php echo json_encode($period); ?>
 			</div>
 		</form>
 	<?php
-	if($roomid&&checkroompermission($login["id"],$roomid)){
+	if($roomid&&isset($room[$roomid])&&checkroompermission($login["id"],$roomid)){
 	?>
 		<h2>管理員預約</h2>
 		<form method="post" id="borrowadminform">
