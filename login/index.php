@@ -79,6 +79,7 @@ if(checklogin()){
 <?php
 include_once("../res/comhead.php");
 ?>
+<link rel="canonical" href="<?=$cfg['site']['url']?>login/">
 <title>登入-<?php echo $cfg['site']['name']; ?></title>
 </head>
 <body Marginwidth="-1" Marginheight="-1" Topmargin="0" Leftmargin="0">

@@ -67,6 +67,7 @@ else if(!checkroompermission($login["id"],$borrow["roomid"]))addmsgbox("info","�
 <?php
 include_once("../res/comhead.php");
 ?>
+<meta name="robots" content="noindex">
 <title>借用管理-<?php echo $cfg['site']['name']; ?></title>
 </head>
 <body Marginwidth="-1" Marginheight="-1" Topmargin="0" Leftmargin="0">

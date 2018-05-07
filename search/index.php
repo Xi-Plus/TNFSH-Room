@@ -162,6 +162,7 @@ if (!in_array($layout, ["1", "2"])) {
 <?php
 include_once("../res/comhead.php");
 ?>
+<link rel="canonical" href="<?=$cfg['site']['url']?>search/<?=($roomid?"?roomid=".$roomid:"")?>">
 <title>所有預約查詢-<?php echo $cfg['site']['name']; ?></title>
 </head>
 <body Marginwidth="-1" Marginheight="-1" Topmargin="0" Leftmargin="0">
